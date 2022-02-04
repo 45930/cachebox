@@ -1,54 +1,29 @@
-<header>
-	<nav>
-		<ul>
-			<li><a sveltekit:prefetch href="/">Puzzles</a></li>
-			<li>
-				<a sveltekit:prefetch href="/about">About</a>
-			</li>
-		</ul>
-	</nav>
-</header>
-<main><slot /></main>
+<div class="2xl:container 2xl:mx-auto">
+	<div class="bg-white rounded shadow-lg py-5 px-7">
+		<nav class="flex justify-between">
+			<div class="flex items-center space-x-3 lg:pr-16 pr-6">
+				<h2 class="font-normal text-2xl leading-6 text-gray-800">Cachebox</h2>
+			</div>
+			<ul class="flex flex-auto space-x-2">
+				<li
+					class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-gray-600 border border-white bg-gray-50 cursor-pointer px-3 py-2.5 font-normal text-xs leading-3 shadow-md rounded"
+				>
+					<a sveltekit:prefetch href="/">Puzzles</a>
+				</li>
+				<li
+					class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-gray-600 border border-white bg-gray-50 cursor-pointer px-3 py-2.5 font-normal text-xs leading-3 shadow-md rounded"
+				>
+					<a sveltekit:prefetch href="/about">About</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</div>
 
-<style>
-	header {
-		display: flex;
-		justify-content: center;
-	}
+<main class="container mx-auto pt-10"><slot /></main>
 
-	nav {
-		display: flex;
-		justify-content: center;
-	}
-
-	ul {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		list-style: none;
-	}
-
-	nav a {
-		display: flex;
-		height: 100%;
-		align-items: center;
-		padding: 0 1em;
-		color: var(--heading-color);
-		text-decoration: none;
-		transition: color 0.2s linear;
-	}
-
-	a:hover {
-		color: var(--accent-color);
-	}
-
-	main {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		padding: 1rem;
-		width: 100%;
-		max-width: 1024px;
-		margin: 0 auto;
-	}
+<style global lang="postcss">
+	@tailwind base;
+	@tailwind components;
+	@tailwind utilities;
 </style>
