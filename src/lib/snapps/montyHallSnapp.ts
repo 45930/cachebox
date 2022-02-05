@@ -48,15 +48,15 @@ export class MontyHallSnapp extends SmartContract {
     this.balance.addInPlace(initialBalance);
 
     // Random field to hide the winning door stat
-    // const hashingKey = Field.random();
+    const hashingKey = Field.random();
 
     // Pick winning door at random
-    // const winningDoorField = randomDoor();
-    // console.log(winningDoorField.toString())
+    const winningDoorField = randomDoor();
+    console.log(winningDoorField.toString())
 
     // Door is a number 1, 2, or 3
-    // winningDoorField.assertGt(0);
-    // winningDoorField.assertLt(4);
+    winningDoorField.assertGt(0);
+    winningDoorField.assertLt(4);
 
     // Winning door is secret
     // guessed door is set to 0 until a guess is made
@@ -67,8 +67,8 @@ export class MontyHallSnapp extends SmartContract {
     this.guessedDoor.set(Field(0));
     this.gameStep.set(Field(0));
 
-    // this.hashingKey = hashingKey;
-    // this.clearWinningDoor = winningDoorField;
+    this.hashingKey = hashingKey;
+    this.clearWinningDoor = winningDoorField;
   }
 
   @method async guessDoor(

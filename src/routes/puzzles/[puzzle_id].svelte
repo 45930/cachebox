@@ -9,7 +9,6 @@
 </script>
 
 <script lang="ts">
-	import { snappConfigsStore } from '$lib/stores';
 	import type { DeployedSnappInterface } from 'src/global';
 
 	export let snappAddress;
