@@ -20,7 +20,15 @@ const config = {
 
 	kit: {
 		adapter: adapter(),
-	}
+		vite: () => ({
+			build: {
+				target: ['esnext']
+			},
+			ssr: {
+				noExternal: ['snarkyjs']
+			},
+		})
+	},
 };
 
 export default config;
