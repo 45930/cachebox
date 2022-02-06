@@ -24,9 +24,7 @@ const config = {
 			build: {
 				target: ['esnext']
 			},
-			ssr: {
-				noExternal: ['snarkyjs']
-			},
+			ssr: false,
 		})
 	},
 };

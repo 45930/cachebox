@@ -13,12 +13,13 @@
 
 	export let snappAddress;
 
-	const snappConfigs: DeployedSnappInterface[] = $snappConfigsStore;
-	const snappConfig = snappConfigs.find((sc) => sc.address == snappAddress);
+	// const snappConfigs: DeployedSnappInterface[] = $snappConfigsStore;
+	// const snappConfig = snappConfigs.find((sc) => sc.address == snappAddress);
 </script>
 
 <div>
-	{snappConfig.title}
+	<!-- {snappConfig.title} -->
+	Hello
 </div>
 <div>
 	Snapp deployed at: {snappAddress}

@@ -7,14 +7,21 @@
 	let snappConfigs: DeployedSnappInterface[] = [];
 
 	onMount(async () => {
-		let snappSourceCode = await import('$lib/snapps/montyHallSnapp');
+		// let snappSourceCode = await import('$lib/snapps/montyHallSnapp');
+		let snappSourceCode = await import('$lib/snapps/verySimpleSnapp');
 		console.log('loading snarky');
 		await snappSourceCode.load();
 		console.log('loaded snarky!');
-		const montyHallSnapp: MontyHallSnappInterface = await snappSourceCode.deploy();
-		snappConfigs.push(montyHallSnapp);
+		// const montyHallSnapp: MontyHallSnappInterface = await snappSourceCode.deploy();
+		// const verySimpleSnapp: DeployedSnappInterface = await snappSourceCode.deploy();
+		// snappConfigs.push(verySimpleSnapp);
 		isSnarkyLoaded = true;
 	});
+
+	const deploySnapp = async function () {
+		let snappSourceCode = await import('$lib/snapps/verySimpleSnapp');
+		await snappSourceCode.deploy();
+	};
 </script>
 
 <div>
@@ -23,6 +30,7 @@
 	</div>
 	<div class="container flex justify-center">
 		{#if isSnarkyLoaded}
+			<button on:click={() => deploySnapp()}>Click Me</button>
 			<div class="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 				{#each snappConfigs as snappConfig}
 					<SnappCard {snappConfig} />
