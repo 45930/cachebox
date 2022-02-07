@@ -7,14 +7,12 @@
 	let snappConfigs: DeployedSnappInterface[] = [];
 
 	onMount(async () => {
-		// let snappSourceCode = await import('$lib/snapps/montyHallSnapp');
-		let snappSourceCode = await import('$lib/snapps/verySimpleSnapp');
+		let snappSourceCode = await import('$lib/snapps/montyHallSnapp');
 		console.log('loading snarky');
 		await snappSourceCode.load();
 		console.log('loaded snarky!');
-		// const montyHallSnapp: MontyHallSnappInterface = await snappSourceCode.deploy();
-		// const verySimpleSnapp: DeployedSnappInterface = await snappSourceCode.deploy();
-		// snappConfigs.push(verySimpleSnapp);
+		const montyHallSnapp: MontyHallSnappInterface = await snappSourceCode.deploy();
+		snappConfigs.push(montyHallSnapp);
 		isSnarkyLoaded = true;
 	});
 

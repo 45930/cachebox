@@ -34,14 +34,18 @@ function randomDoor(): Field {
   return winningDoorField;
 }
 
-export class MontyHallSnapp extends SmartContract {
-  @state(Field) winningDoor = State<Field>();
-  @state(Field) guessedDoor = State<Field>();
-  @state(Field) gameStep = State<Field>();
-
+class MontyHallSnapp extends SmartContract {
   clearWinningDoor: Field = Field(0);
   hashingKey: Field = Field(0);
   revealedDoor: Field = Field(0);
+
+  constructor(address: PublicKey) {
+    super(address);
+
+    this.winningDoor = State();
+    this.guessedDoor = State();
+    this.gameStep = State();
+  }
 
   deploy(initialBalance: UInt64) {
     super.deploy();
@@ -71,7 +75,7 @@ export class MontyHallSnapp extends SmartContract {
     this.clearWinningDoor = winningDoorField;
   }
 
-  @method async guessDoor(
+  async guessDoor(
     n: number
   ): Promise<string> {
     const guessedDoorField = Field(n);
@@ -134,7 +138,7 @@ export class MontyHallSnapp extends SmartContract {
     return this.revealedDoor.toString();
   }
 
-  @method async evaluate(isSwitching: boolean) {
+  async evaluate(isSwitching: boolean) {
     const isSwitchingBool = Bool(isSwitching);
     const guessedDoor = await this.guessedDoor.get();
 
@@ -163,7 +167,7 @@ export class MontyHallSnapp extends SmartContract {
     await this.reset();
   }
 
-  @method async reset() {
+  async reset() {
     const newDoor = randomDoor();
 
     await this.winningDoor.set(Poseidon.hash([this.hashingKey, newDoor]));
@@ -172,6 +176,24 @@ export class MontyHallSnapp extends SmartContract {
     this.revealedDoor = Field(0);
   }
 }
+
+// manually apply decorators:
+
+// @state
+state(Field)(MontyHallSnapp.prototype, 'winningDoor');
+state(Field)(MontyHallSnapp.prototype, 'guessedDoor');
+state(Field)(MontyHallSnapp.prototype, 'gameStep');
+
+// @method
+Reflect.metadata('design:paramtypes', [Number])(MontyHallSnapp.prototype, 'guessDoor');
+method(MontyHallSnapp.prototype, 'guessDoor');
+
+Reflect.metadata('design:paramtypes', [Boolean])(MontyHallSnapp.prototype, 'evaluate');
+method(MontyHallSnapp.prototype, 'evaluate');
+
+method(MontyHallSnapp.prototype, 'reset');
+
+export { MontyHallSnapp };
 
 export async function deploy() {
   await isReady;

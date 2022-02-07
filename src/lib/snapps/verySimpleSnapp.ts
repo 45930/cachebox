@@ -14,25 +14,34 @@ import {
 
 import type { DeployedSnappInterface } from 'src/global';
 
-export class VerySimpleSnapp extends SmartContract {
-  @state(Field) x = State<Field>();
+class VerySimpleSnapp extends SmartContract {
+  constructor(address: PublicKey) {
+    super(address);
+    this.x = State();
+  }
 
   deploy(initialBalance: UInt64) {
     super.deploy();
     this.balance.addInPlace(initialBalance);
-  }
-
-  @method async setState() {
-    await this.x.set(Field(8));
+    this.x.set(Field.zero);
   }
 }
+
+// manually apply decorators:
+
+// @state(Field) x
+state(Field)(VerySimpleSnapp.prototype, 'x');
+
+// @method update(y: Field)
+Reflect.metadata('design:paramtypes', [Field])(VerySimpleSnapp.prototype, 'update');
+method(VerySimpleSnapp.prototype, 'update');
 
 export async function deploy() {
   await isReady;
 
   const snappPrivkey = PrivateKey.random();
   const snappAddress = snappPrivkey.toPublicKey();
-  let snapp = new VerySimpleSnapp(snappAddress);
+  const snapp = new VerySimpleSnapp(snappAddress);
 
   const snappInterface: DeployedSnappInterface = {
     title: 'Very Simple',
@@ -51,13 +60,6 @@ export async function deploy() {
   });
   await tx.send().wait();
 
-  const tx2 = Mina.transaction(DEPLOYER_ACCOUNT, async () => {
-    console.log('Setting Mony Hall Snapp...');
-    snapp.setState();
-    console.log(snapp);
-  });
-  await tx2.send().wait();
-
   console.log('Deployed...')
   return snappInterface;
 }
@@ -66,6 +68,7 @@ export async function load() {
   await isReady;
 }
 
+export { VerySimpleSnapp };
 
 /*
 Local MINA blockchain config for the purposes of running dev.
