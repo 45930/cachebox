@@ -50,7 +50,8 @@
 			},
 			{
 				description: 'Reset State',
-				functionName: 'reset'
+				functionName: 'reset',
+				functionParams: []
 			}
 		]
 	};

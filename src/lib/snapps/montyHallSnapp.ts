@@ -36,14 +36,10 @@ function randomDoor(): Field {
 }
 
 class MontyHallSnapp extends SmartContract {
-  hashingKey: Field = Field(0);
-  revealedDoor: Field = Field.zero;
-
   constructor(address: PublicKey) {
     super(address);
 
     this.winningDoor = State();
-    this.clearWinningDoor = State();
     this.guessedDoor = State();
     this.gameStep = State();
   }
@@ -66,112 +62,106 @@ class MontyHallSnapp extends SmartContract {
     // guessed door is set to 0 until a guess is made
     // game step is set to 0 until a guess is made
     // revealed door set to 0 until a door gets revealed
-    this.winningDoor.set(Poseidon.hash([hashingKey, winningDoorField]));
-    this.clearWinningDoor.set(winningDoorField);
-    this.guessedDoor.set(Field.zero);
+    this.winningDoor.set(winningDoorField);
+    this.guessedDoor.set(Field(0));
     this.gameStep.set(Field(0));
-
-    this.hashingKey = hashingKey;
   }
 
   async guessDoor(
     n: number
   ): Promise<string> {
-    const guessedDoorField = Field(Number(n));
+    const guessedDoorField = Field(n);
     guessedDoorField.assertGt(Field.zero);
     guessedDoorField.assertLt(Field(4));
 
-    await this.guessedDoor.set(guessedDoorField);
-    const winningDoor = await this.clearWinningDoor.get();
+    const winningDoor = await this.winningDoor.get();
 
     const randomBits = Field.random().toBits();
 
-    console.log(winningDoor);
-    console.log(guessedDoorField);
+    await this.guessedDoor.set(guessedDoorField);
 
-    console.log(randomBits);
 
-    const revealedDoor = Circuit.if(
-      Field(1).equals(Field(2)),
-      Field(1),
-      Field(2)
-    )
-    //   winningDoor.equals(guessedDoorField),
-    //   Circuit.if(
-    //     guessedDoorField.equals(Field(1)),
-    //     Circuit.if(
-    //       randomBits.at(0).equals(Bool(false)),
-    //       Field(2),
-    //       Field(3)
-    //     ),
-    //     Circuit.if(
-    //       guessedDoorField.equals(Field(2)),
-    //       Circuit.if(
-    //         randomBits.at(0).equals(Bool(false)),
-    //         Field(1),
-    //         Field(3)
-    //       ),
-    //       // else, the winning door is 3
-    //       Circuit.if(
-    //         randomBits.at(0).equals(Bool(false)),
-    //         Field(1),
-    //         Field(2)
-    //       ),
-    //     )
-    //   ),
-    //   Circuit.if(
-    //     guessedDoorField.equals(Field(1)),
-    //     Circuit.if(
-    //       winningDoor.equals(Field(2)),
-    //       Field(3),
-    //       Field(2)
-    //     ),
-    //     Circuit.if(
-    //       guessedDoorField.equals(Field(2)),
-    //       Circuit.if(
-    //         winningDoor.equals(Field(1)),
-    //         Field(3),
-    //         Field(1)
-    //       ),
-    //       // else, the guessed door is 3
-    //       Circuit.if(
-    //         winningDoor.equals(Field(1)),
-    //         Field(2),
-    //         Field(1)
-    //       )
-    //     )
-    //   )
-    // )
+    // TODO: figure out why this breaks
+    Circuit.asProver(() => {
 
-    console.log('here');
 
-    console.log(`Revealed: ${revealedDoor}`);
+      const revealedDoor = Circuit.if(
+        winningDoor.equals(guessedDoorField), Circuit.if(
+          guessedDoorField.equals(Field(1)),
+          Circuit.if(
+            randomBits.at(0).equals(Bool(false)),
+            Field(2),
+            Field(3)
+          ),
+          Circuit.if(
+            guessedDoorField.equals(Field(2)),
+            Circuit.if(
+              randomBits.at(0).equals(Bool(false)),
+              Field(1),
+              Field(3)
+            ),
+            // else, the winning door is 3
+            Circuit.if(
+              randomBits.at(0).equals(Bool(false)),
+              Field(1),
+              Field(2)
+            ),
+          )
+        ),
+        Circuit.if(
+          guessedDoorField.equals(Field(1)),
+          Circuit.if(
+            winningDoor.equals(Field(2)),
+            Field(3),
+            Field(2)
+          ),
+          Circuit.if(
+            guessedDoorField.equals(Field(2)),
+            Circuit.if(
+              winningDoor.equals(Field(1)),
+              Field(3),
+              Field(1)
+            ),
+            // else, the guessed door is 3
+            Circuit.if(
+              winningDoor.equals(Field(1)),
+              Field(2),
+              Field(1)
+            )
+          )
+        )
+      )
+      console.log(`Revealed: ${revealedDoor}`);
+    })
+
     return '';
   }
 
   async evaluate(isSwitching: boolean) {
     const isSwitchingBool = Bool(isSwitching);
-    const winningDoor = await this.clearWinningDoor.get();
+    const winningDoor = await this.winningDoor.get();
     const guessedDoor = await this.guessedDoor.get();
 
-    console.log(`Doors match? (pre-switch): ${guessedDoor.equals(winningDoor).toString()}`);
-    const winner = Circuit.if(
-      isSwitchingBool,
-      Circuit.if(
-        guessedDoor.equals(winningDoor),
-        Bool(true),
-        Bool(false)
-      ),
-      Circuit.if(
-        guessedDoor.equals(winningDoor),
-        Bool(false),
-        Bool(true)
+    // TODO: Figure out why this doesn't work
+    Circuit.asProver(() => {
+      console.log(`Doors match? (pre-switch): ${guessedDoor.equals(winningDoor).toBoolean()}`);
+      const winner = Circuit.if(
+        isSwitchingBool,
+        Circuit.if(
+          guessedDoor.equals(winningDoor),
+          Bool(false),
+          Bool(true)
+        ),
+        Circuit.if(
+          guessedDoor.equals(winningDoor),
+          Bool(true),
+          Bool(false)
+        )
       )
-    )
 
-    console.log(`Are you a winner?: ${winner}`);
+      console.log(`Are you a winner?: ${winner.toBoolean()}`);
 
-    await this.reset();
+    })
   }
 
   async reset() {
@@ -179,10 +169,9 @@ class MontyHallSnapp extends SmartContract {
     const newDoor = randomDoor();
     console.log(`Random door: ${newDoor}`)
 
-    await this.winningDoor.set(Poseidon.hash([this.hashingKey, newDoor]));
+    await this.winningDoor.set(newDoor);
     await this.guessedDoor.set(Field(0))
     await this.gameStep.set(Field(0))
-    this.revealedDoor = Field(0);
   }
 }
 
@@ -190,7 +179,6 @@ class MontyHallSnapp extends SmartContract {
 
 // @state
 state(Field)(MontyHallSnapp.prototype, 'winningDoor');
-state(Field)(MontyHallSnapp.prototype, 'clearWinningDoor');
 state(Field)(MontyHallSnapp.prototype, 'guessedDoor');
 state(Field)(MontyHallSnapp.prototype, 'gameStep');
 
@@ -288,11 +276,11 @@ export async function reset(snappAddress: PublicKey) {
     console.log('Resetting Snapp');
     await snapp.reset();
   });
-  try {
-    await tx.send().wait();
-  } catch (err) {
-    console.log(`Transaction Failed! Error: ${err}`);
-  }
+  await tx.send().wait();
+  // try {
+  // } catch (err) {
+  //   console.log(`Transaction Failed! Error: ${err}`);
+  // }
 }
 
 export async function getSnappState(snappAddress: PublicKey) {
