@@ -17,17 +17,18 @@ import {
 
 import type { MontyHallSnappInterface } from 'src/global';
 
-function randomDoor(): Field {
-  let winningDoorField: Field;
+await isReady;
 
-  const [_, remainder] = new UInt64(Field.random()).divMod(3);
-  Circuit.if(
+function randomDoor(): Field {
+  const randomUint = new UInt64(Field.random())
+  const [_, remainder] = randomUint.divMod(3);
+  const winningDoorField = Circuit.if(
     remainder.equals(UInt64.zero),
-    winningDoorField = Field(1),
+    Field(1),
     Circuit.if(
       remainder.equals(UInt64.fromNumber(1)),
-      winningDoorField = Field(2),
-      winningDoorField = Field(3)
+      Field(2),
+      Field(3)
     )
   )
 
@@ -35,14 +36,14 @@ function randomDoor(): Field {
 }
 
 class MontyHallSnapp extends SmartContract {
-  clearWinningDoor: Field = Field(0);
   hashingKey: Field = Field(0);
-  revealedDoor: Field = Field(0);
+  revealedDoor: Field = Field.zero;
 
   constructor(address: PublicKey) {
     super(address);
 
     this.winningDoor = State();
+    this.clearWinningDoor = State();
     this.guessedDoor = State();
     this.gameStep = State();
   }
@@ -56,119 +57,127 @@ class MontyHallSnapp extends SmartContract {
 
     // Pick winning door at random
     const winningDoorField = randomDoor();
-    console.log(winningDoorField.toString())
 
     // Door is a number 1, 2, or 3
-    winningDoorField.assertGt(0);
-    winningDoorField.assertLt(4);
+    winningDoorField.assertGt(Field.zero);
+    winningDoorField.assertLt(Field(4));
 
     // Winning door is secret
     // guessed door is set to 0 until a guess is made
     // game step is set to 0 until a guess is made
     // revealed door set to 0 until a door gets revealed
-    // this.winningDoor.set(Poseidon.hash([hashingKey, winningDoorField]));
-    this.winningDoor.set(Field(0));
-    this.guessedDoor.set(Field(0));
+    this.winningDoor.set(Poseidon.hash([hashingKey, winningDoorField]));
+    this.clearWinningDoor.set(winningDoorField);
+    this.guessedDoor.set(Field.zero);
     this.gameStep.set(Field(0));
 
     this.hashingKey = hashingKey;
-    this.clearWinningDoor = winningDoorField;
   }
 
   async guessDoor(
     n: number
   ): Promise<string> {
-    const guessedDoorField = Field(n);
-    guessedDoorField.assertGt(0);
-    guessedDoorField.assertLt(4);
+    const guessedDoorField = Field(Number(n));
+    guessedDoorField.assertGt(Field.zero);
+    guessedDoorField.assertLt(Field(4));
 
     await this.guessedDoor.set(guessedDoorField);
+    const winningDoor = await this.clearWinningDoor.get();
 
     const randomBits = Field.random().toBits();
 
-    Circuit.if(
-      guessedDoorField.equals(this.clearWinningDoor),
-      Circuit.if(
-        guessedDoorField.equals(Field(1)),
-        Circuit.if(
-          randomBits.at[0].equals(0),
-          this.revealedDoor = Field(2),
-          this.revealedDoor = Field(3)
-        ),
-        Circuit.if(
-          guessedDoorField.equals(Field(2)),
-          Circuit.if(
-            randomBits.at[0].equals(0),
-            this.revealedDoor = Field(1),
-            this.revealedDoor = Field(3)
-          ),
-          // else, the winning door is 3
-          Circuit.if(
-            randomBits.at[0].equals(0),
-            this.revealedDoor = Field(1),
-            this.revealedDoor = Field(2)
-          ),
-        )
-      ),
-      Circuit.if(
-        guessedDoorField.equals(Field(1)),
-        Circuit.if(
-          this.clearWinningDoor.equals(Field(2)),
-          this.revealedDoor = Field(3),
-          this.revealedDoor = Field(2)
-        ),
-        Circuit.if(
-          guessedDoorField.equals(Field(2)),
-          Circuit.if(
-            this.clearWinningDoor.equals(Field(1)),
-            this.revealedDoor = Field(3),
-            this.revealedDoor = Field(1)
-          ),
-          // else, the guessed door is 3
-          Circuit.if(
-            this.clearWinningDoor.equals(Field(1)),
-            this.revealedDoor = Field(2),
-            this.revealedDoor = Field(1)
-          )
-        )
-      )
-    )
+    console.log(winningDoor);
+    console.log(guessedDoorField);
 
-    await this.gameStep.set(Field(1));
-    return this.revealedDoor.toString();
+    console.log(randomBits);
+
+    const revealedDoor = Circuit.if(
+      Field(1).equals(Field(2)),
+      Field(1),
+      Field(2)
+    )
+    //   winningDoor.equals(guessedDoorField),
+    //   Circuit.if(
+    //     guessedDoorField.equals(Field(1)),
+    //     Circuit.if(
+    //       randomBits.at(0).equals(Bool(false)),
+    //       Field(2),
+    //       Field(3)
+    //     ),
+    //     Circuit.if(
+    //       guessedDoorField.equals(Field(2)),
+    //       Circuit.if(
+    //         randomBits.at(0).equals(Bool(false)),
+    //         Field(1),
+    //         Field(3)
+    //       ),
+    //       // else, the winning door is 3
+    //       Circuit.if(
+    //         randomBits.at(0).equals(Bool(false)),
+    //         Field(1),
+    //         Field(2)
+    //       ),
+    //     )
+    //   ),
+    //   Circuit.if(
+    //     guessedDoorField.equals(Field(1)),
+    //     Circuit.if(
+    //       winningDoor.equals(Field(2)),
+    //       Field(3),
+    //       Field(2)
+    //     ),
+    //     Circuit.if(
+    //       guessedDoorField.equals(Field(2)),
+    //       Circuit.if(
+    //         winningDoor.equals(Field(1)),
+    //         Field(3),
+    //         Field(1)
+    //       ),
+    //       // else, the guessed door is 3
+    //       Circuit.if(
+    //         winningDoor.equals(Field(1)),
+    //         Field(2),
+    //         Field(1)
+    //       )
+    //     )
+    //   )
+    // )
+
+    console.log('here');
+
+    console.log(`Revealed: ${revealedDoor}`);
+    return '';
   }
 
   async evaluate(isSwitching: boolean) {
     const isSwitchingBool = Bool(isSwitching);
+    const winningDoor = await this.clearWinningDoor.get();
     const guessedDoor = await this.guessedDoor.get();
 
-    let winner = Bool(false);
-
-    Circuit.if(
+    console.log(`Doors match? (pre-switch): ${guessedDoor.equals(winningDoor).toString()}`);
+    const winner = Circuit.if(
       isSwitchingBool,
       Circuit.if(
-        guessedDoor.equals(this.clearWinningDoor),
-        winner = Bool(true),
-        winner = Bool(false)
+        guessedDoor.equals(winningDoor),
+        Bool(true),
+        Bool(false)
       ),
       Circuit.if(
-        guessedDoor.equals(this.clearWinningDoor),
-        winner = Bool(false),
-        winner = Bool(true)
+        guessedDoor.equals(winningDoor),
+        Bool(false),
+        Bool(true)
       )
     )
 
-    Circuit.if(
-      winner,
-      console.log("Way to go champ!"),
-      console.log("Better luck next time sport!")
-    )
+    console.log(`Are you a winner?: ${winner}`);
 
     await this.reset();
   }
 
   async reset() {
+    console.log('Resetting Door');
     const newDoor = randomDoor();
+    console.log(`Random door: ${newDoor}`)
 
     await this.winningDoor.set(Poseidon.hash([this.hashingKey, newDoor]));
     await this.guessedDoor.set(Field(0))
@@ -181,6 +190,7 @@ class MontyHallSnapp extends SmartContract {
 
 // @state
 state(Field)(MontyHallSnapp.prototype, 'winningDoor');
+state(Field)(MontyHallSnapp.prototype, 'clearWinningDoor');
 state(Field)(MontyHallSnapp.prototype, 'guessedDoor');
 state(Field)(MontyHallSnapp.prototype, 'gameStep');
 
@@ -196,7 +206,7 @@ method(MontyHallSnapp.prototype, 'reset');
 export { MontyHallSnapp };
 
 export async function deploy() {
-  await isReady;
+
 
   const snappPrivkey = PrivateKey.random();
   const snappAddress = snappPrivkey.toPublicKey();
@@ -240,8 +250,6 @@ export async function guessDoor(snappAddress: PublicKey, door: number): Promise<
     return
   }
 
-  await isReady;
-
   let revealedDoor = ''
   const snapp = new MontyHallSnapp(snappAddress);
   const tx = Mina.transaction(USER_ACCOUNT, async () => {
@@ -258,7 +266,7 @@ export async function guessDoor(snappAddress: PublicKey, door: number): Promise<
 }
 
 export async function evaluate(snappAddress: PublicKey, isSwitching: boolean) {
-  await isReady;
+
 
   const snapp = new MontyHallSnapp(snappAddress);
   const tx = Mina.transaction(USER_ACCOUNT, async () => {
@@ -273,7 +281,7 @@ export async function evaluate(snappAddress: PublicKey, isSwitching: boolean) {
 }
 
 export async function reset(snappAddress: PublicKey) {
-  await isReady;
+
 
   const snapp = new MontyHallSnapp(snappAddress);
   const tx = Mina.transaction(USER_ACCOUNT, async () => {
@@ -288,7 +296,7 @@ export async function reset(snappAddress: PublicKey) {
 }
 
 export async function getSnappState(snappAddress: PublicKey) {
-  await isReady;
+
 
   const snappState = (await Mina.getAccount(snappAddress)).snapp.appState;
   const guessedDoor = snappState[1];

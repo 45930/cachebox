@@ -1,24 +1,39 @@
 <script lang="ts">
-	import type { DeployedSnappInterface, MontyHallSnappInterface } from 'src/global';
+	import { deployedSnappsStore } from '$lib/stores/deployedSnappStore';
+
+	import type { MontyHallSnappInterface } from 'src/global';
 	import { onMount } from 'svelte';
 	import SnappCard from './_SnappCard.svelte';
 
 	let isSnarkyLoaded = false;
-	let snappConfigs: DeployedSnappInterface[] = [];
+	let isSomethingDeployed = false;
+	let deployedSnapps = $deployedSnappsStore;
 
 	onMount(async () => {
-		let snappSourceCode = await import('$lib/snapps/montyHallSnapp');
-		console.log('loading snarky');
-		await snappSourceCode.load();
-		console.log('loaded snarky!');
-		const montyHallSnapp: MontyHallSnappInterface = await snappSourceCode.deploy();
-		snappConfigs.push(montyHallSnapp);
-		isSnarkyLoaded = true;
+		loadSnarky().then(() => {
+			deploySnapp();
+		});
 	});
 
 	const deploySnapp = async function () {
-		let snappSourceCode = await import('$lib/snapps/verySimpleSnapp');
-		await snappSourceCode.deploy();
+		if (Object.keys(deployedSnapps).length == 0) {
+			let snappSourceCode = await import('$lib/snapps/montyHallSnapp');
+			const storeState = deployedSnapps;
+
+			const montyHallSnapp: MontyHallSnappInterface = await snappSourceCode.deploy();
+
+			storeState[montyHallSnapp.address.toJSON()['g']['x'].slice(0, 10)] = montyHallSnapp;
+			deployedSnappsStore.set(storeState);
+		}
+		isSomethingDeployed = true;
+	};
+
+	const loadSnarky = async function () {
+		console.log('loading snarky');
+		let snappSourceCode = await import('$lib/snapps/montyHallSnapp');
+		await snappSourceCode.load();
+		isSnarkyLoaded = true;
+		console.log('loaded snarky!');
 	};
 </script>
 
@@ -27,11 +42,10 @@
 		<p class="text-xl font-bold">Available Adventures</p>
 	</div>
 	<div class="container flex justify-center">
-		{#if isSnarkyLoaded}
-			<button on:click={() => deploySnapp()}>Click Me</button>
+		{#if isSomethingDeployed}
 			<div class="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-				{#each snappConfigs as snappConfig}
-					<SnappCard {snappConfig} />
+				{#each Object.keys(deployedSnapps) as address}
+					<SnappCard {address} />
 				{/each}
 			</div>
 		{:else}

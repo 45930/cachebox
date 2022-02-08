@@ -1,16 +1,19 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import type { DeployedSnappInterface } from 'src/global';
+	import { deployedSnappsStore } from '$lib/stores/deployedSnappStore';
 
-	export let snappConfig: DeployedSnappInterface;
+	export let address: string;
+	let deployedSnapps = $deployedSnappsStore;
+	let snappConfig = deployedSnapps[address];
 
-	const routeToSnapp = function (snappAddress: string) {
-		goto(`/puzzles/${snappAddress}`);
+	const routeToSnapp = function (address: string) {
+		goto(`/puzzles/${address}`);
 	};
 </script>
 
 <div
-	on:click={() => routeToSnapp(snappConfig.address)}
+	on:click={() => routeToSnapp(address)}
 	class="max-w-xs h-64 justify-center bg-blue-100 rounded-lg border border-gray-200 mb-6 py-5 cursor-pointer"
 >
 	<div class="flex justify-center">
