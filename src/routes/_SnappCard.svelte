@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import type { DeployedSnappInterface } from 'src/global';
 	import { deployedSnappsStore } from '$lib/stores/deployedSnappStore';
 
 	export let address: string;

@@ -1,17 +1,18 @@
 <script lang="ts">
 	import { deployedSnappsStore } from '$lib/stores/deployedSnappStore';
+	import { loadSnarky as loadSnarkyGlobal, snarkyStore } from '$lib/stores/minaStore';
 
 	import type { MontyHallSnappInterface } from 'src/global';
 	import { onMount } from 'svelte';
 	import SnappCard from './_SnappCard.svelte';
 
-	let isSnarkyLoaded = false;
-	let isSomethingDeployed = false;
+	let isSnarkyLoaded = $snarkyStore;
 	let deployedSnapps = $deployedSnappsStore;
+	let shouldRenderSnarkyComponents = false;
 
 	onMount(async () => {
 		loadSnarky().then(() => {
-			deploySnapp();
+			shouldRenderSnarkyComponents = true;
 		});
 	});
 
@@ -25,24 +26,22 @@
 			storeState[montyHallSnapp.address.toJSON()['g']['x'].slice(0, 10)] = montyHallSnapp;
 			deployedSnappsStore.set(storeState);
 		}
-		isSomethingDeployed = true;
 	};
 
 	const loadSnarky = async function () {
-		console.log('loading snarky');
-		let snappSourceCode = await import('$lib/snapps/montyHallSnapp');
-		await snappSourceCode.load();
-		isSnarkyLoaded = true;
-		console.log('loaded snarky!');
+		if (!isSnarkyLoaded) {
+			await loadSnarkyGlobal();
+			await deploySnapp();
+		}
 	};
 </script>
 
 <div>
 	<div class="justify-center mx-auto mb-16">
-		<p class="text-xl font-bold">Available Adventures</p>
+		<p class="text-xl font-bold">Available Puzzles</p>
 	</div>
 	<div class="container flex justify-center">
-		{#if isSomethingDeployed}
+		{#if shouldRenderSnarkyComponents}
 			<div class="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 				{#each Object.keys(deployedSnapps) as address}
 					<SnappCard {address} />
