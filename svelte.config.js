@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-node';
+import adapter from '@sveltejs/adapter-static';
 import autoprefixer from 'autoprefixer'
 import preprocess from 'svelte-preprocess';
 import tailwind from 'tailwindcss';
@@ -19,7 +19,9 @@ const config = {
 	),
 
 	kit: {
-		adapter: adapter(),
+		adapter: adapter({
+			out: 'build'
+		}),
 		vite: () => ({
 			build: {
 				target: ['esnext']
