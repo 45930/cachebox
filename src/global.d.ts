@@ -14,10 +14,10 @@ export type DeployedSnappInterface = {
 
 interface MontyHallSnappInterface extends DeployedSnappInterface {
   guessDoor(door: number): Promise<string>;
-  evaluate(isSwitching: boolean): Promise<void>;
+  evaluate(isSwitching: boolean): Promise<string>;
   reset(newDoor: number): Promise<void>;
   getSnappState(): Promise<{
-    guessedDoor: Field;
-    gameStep: Field;
+    winningDoor: string;
+    guessedDoor: sting;
   }>;
 }

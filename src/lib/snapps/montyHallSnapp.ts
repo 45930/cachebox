@@ -36,12 +36,16 @@ function randomDoor(): Field {
 }
 
 class MontyHallSnapp extends SmartContract {
+  revealedDoor: Number;
+  isWinner: Boolean;
+
   constructor(address: PublicKey) {
     super(address);
 
     this.winningDoor = State();
     this.guessedDoor = State();
-    this.gameStep = State();
+    this.revealedDoor = 0;
+    this.isWinner = false;
   }
 
   deploy(initialBalance: UInt64) {
@@ -64,12 +68,11 @@ class MontyHallSnapp extends SmartContract {
     // revealed door set to 0 until a door gets revealed
     this.winningDoor.set(winningDoorField);
     this.guessedDoor.set(Field(0));
-    this.gameStep.set(Field(0));
   }
 
   async guessDoor(
     n: number
-  ): Promise<string> {
+  ): Promise<void> {
     const guessedDoorField = Field(n);
     guessedDoorField.assertGt(Field.zero);
     guessedDoorField.assertLt(Field(4));
@@ -80,61 +83,56 @@ class MontyHallSnapp extends SmartContract {
 
     await this.guessedDoor.set(guessedDoorField);
 
-
-    // TODO: figure out why this breaks
-    Circuit.asProver(() => {
-
-
-      const revealedDoor = Circuit.if(
-        winningDoor.equals(guessedDoorField), Circuit.if(
-          guessedDoorField.equals(Field(1)),
-          Circuit.if(
-            randomBits.at(0).equals(Bool(false)),
-            Field(2),
-            Field(3)
-          ),
-          Circuit.if(
-            guessedDoorField.equals(Field(2)),
-            Circuit.if(
-              randomBits.at(0).equals(Bool(false)),
-              Field(1),
-              Field(3)
-            ),
-            // else, the winning door is 3
-            Circuit.if(
-              randomBits.at(0).equals(Bool(false)),
-              Field(1),
-              Field(2)
-            ),
-          )
+    const revealedDoor = Circuit.if(
+      winningDoor.equals(guessedDoorField), Circuit.if(
+        guessedDoorField.equals(Field(1)),
+        Circuit.if(
+          randomBits.at(0).equals(Bool(false)),
+          Field(2),
+          Field(3)
         ),
         Circuit.if(
-          guessedDoorField.equals(Field(1)),
+          guessedDoorField.equals(Field(2)),
           Circuit.if(
-            winningDoor.equals(Field(2)),
-            Field(3),
+            randomBits.at(0).equals(Bool(false)),
+            Field(1),
+            Field(3)
+          ),
+          // else, the winning door is 3
+          Circuit.if(
+            randomBits.at(0).equals(Bool(false)),
+            Field(1),
             Field(2)
           ),
+        )
+      ),
+      Circuit.if(
+        guessedDoorField.equals(Field(1)),
+        Circuit.if(
+          winningDoor.equals(Field(2)),
+          Field(3),
+          Field(2)
+        ),
+        Circuit.if(
+          guessedDoorField.equals(Field(2)),
           Circuit.if(
-            guessedDoorField.equals(Field(2)),
-            Circuit.if(
-              winningDoor.equals(Field(1)),
-              Field(3),
-              Field(1)
-            ),
-            // else, the guessed door is 3
-            Circuit.if(
-              winningDoor.equals(Field(1)),
-              Field(2),
-              Field(1)
-            )
+            winningDoor.equals(Field(1)),
+            Field(3),
+            Field(1)
+          ),
+          // else, the guessed door is 3
+          Circuit.if(
+            winningDoor.equals(Field(1)),
+            Field(2),
+            Field(1)
           )
         )
       )
+    )
+    Circuit.asProver(() => {
       console.log(`Revealed: ${revealedDoor}`);
+      this.revealedDoor = Number(revealedDoor.toString());
     })
-
-    return '';
   }
 
   async evaluate(isSwitching: boolean) {
@@ -142,25 +140,23 @@ class MontyHallSnapp extends SmartContract {
     const winningDoor = await this.winningDoor.get();
     const guessedDoor = await this.guessedDoor.get();
 
-    // TODO: Figure out why this doesn't work
-    Circuit.asProver(() => {
-      console.log(`Doors match? (pre-switch): ${guessedDoor.equals(winningDoor).toBoolean()}`);
-      const winner = Circuit.if(
-        isSwitchingBool,
-        Circuit.if(
-          guessedDoor.equals(winningDoor),
-          Bool(false),
-          Bool(true)
-        ),
-        Circuit.if(
-          guessedDoor.equals(winningDoor),
-          Bool(true),
-          Bool(false)
-        )
+    const winner = Circuit.if(
+      isSwitchingBool,
+      Circuit.if(
+        guessedDoor.equals(winningDoor),
+        Bool(false),
+        Bool(true)
+      ),
+      Circuit.if(
+        guessedDoor.equals(winningDoor),
+        Bool(true),
+        Bool(false)
       )
+    )
 
+    Circuit.asProver(() => {
       console.log(`Are you a winner?: ${winner.toBoolean()}`);
-
+      this.isWinner = winner.toBoolean();
     })
   }
 
@@ -171,7 +167,6 @@ class MontyHallSnapp extends SmartContract {
 
     await this.winningDoor.set(newDoor);
     await this.guessedDoor.set(Field(0))
-    await this.gameStep.set(Field(0))
   }
 }
 
@@ -180,7 +175,6 @@ class MontyHallSnapp extends SmartContract {
 // @state
 state(Field)(MontyHallSnapp.prototype, 'winningDoor');
 state(Field)(MontyHallSnapp.prototype, 'guessedDoor');
-state(Field)(MontyHallSnapp.prototype, 'gameStep');
 
 // @method
 Reflect.metadata('design:paramtypes', [Number])(MontyHallSnapp.prototype, 'guessDoor');
@@ -194,8 +188,6 @@ method(MontyHallSnapp.prototype, 'reset');
 export { MontyHallSnapp };
 
 export async function deploy() {
-
-
   const snappPrivkey = PrivateKey.random();
   const snappAddress = snappPrivkey.toPublicKey();
   const snapp = new MontyHallSnapp(snappAddress);
@@ -206,7 +198,7 @@ export async function deploy() {
     guessDoor(door: number): Promise<string> {
       return guessDoor(snappAddress, door);
     },
-    evaluate(isSwitching: boolean) {
+    evaluate(isSwitching: boolean): Promise<string> {
       return evaluate(snappAddress, isSwitching);
     },
     reset() {
@@ -234,15 +226,13 @@ export async function deploy() {
 
 export async function guessDoor(snappAddress: PublicKey, door: number): Promise<string> {
   if (!(door === 1 || door === 2 || door === 3)) {
-    console.log(`Door guess ${door} is out of bounds of {1, 2, 3}`)
-    return
+    throw new Error(`${door} is out of range {1, 2, 3}`)
   }
 
-  let revealedDoor = ''
   const snapp = new MontyHallSnapp(snappAddress);
   const tx = Mina.transaction(USER_ACCOUNT, async () => {
     console.log(`Guessing Door ${door}...`);
-    revealedDoor = await snapp.guessDoor(door);
+    await snapp.guessDoor(door);
   });
   try {
     await tx.send().wait();
@@ -250,12 +240,10 @@ export async function guessDoor(snappAddress: PublicKey, door: number): Promise<
     console.log(`Transaction Failed! Error: ${err}`);
   }
 
-  return revealedDoor;
+  return `Revealed Door: ${snapp.revealedDoor}`;
 }
 
-export async function evaluate(snappAddress: PublicKey, isSwitching: boolean) {
-
-
+export async function evaluate(snappAddress: PublicKey, isSwitching: boolean): Promise<string> {
   const snapp = new MontyHallSnapp(snappAddress);
   const tx = Mina.transaction(USER_ACCOUNT, async () => {
     console.log(`Evaluating Game with isSwitcing = ${isSwitching}`);
@@ -266,6 +254,8 @@ export async function evaluate(snappAddress: PublicKey, isSwitching: boolean) {
   } catch (err) {
     console.log(`Transaction Failed! Error: ${err}`);
   }
+
+  return snapp.isWinner ? 'You win!' : 'Sorry, you lost.'
 }
 
 export async function reset(snappAddress: PublicKey) {
@@ -284,12 +274,10 @@ export async function reset(snappAddress: PublicKey) {
 }
 
 export async function getSnappState(snappAddress: PublicKey) {
-
-
   const snappState = (await Mina.getAccount(snappAddress)).snapp.appState;
-  const guessedDoor = snappState[1];
-  const gameStep = snappState[2];
-  return { guessedDoor, gameStep };
+  const winningDoor = snappState[0].toString();
+  const guessedDoor = snappState[1].toString();
+  return { winningDoor, guessedDoor };
 }
 
 export async function load() {
