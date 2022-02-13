@@ -6,6 +6,7 @@ import { PublicKey } from 'snarkyjs';
 export type DeployedSnappInterface = {
   title: string,
   address: PublicKey,
+  getSnappState(): Promise<any>,
   subtitle?: string,
   reward?: number,
   ipfsPromptHash?: string,
