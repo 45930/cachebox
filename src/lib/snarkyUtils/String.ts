@@ -29,24 +29,10 @@ export class StringCircuitValue extends CircuitValue {
     this.value.forEach((uint) => {
       uint.toBits().forEach(bit => bits.push(bit));
     });
-
-    // let j = 0;
-    // for (let i = 0; i < 32; i++) {
-    //   if (j < this.value.length) {
-    //     const uint = this.value[j];
-    //     console.log(uint)
-    //     uint.toBits().forEach(bit => bits.push(bit));
-    //     j++;
-    //   } else {
-    //     console.log(0)
-    //     UInt8.zero.toBits().forEach(bit => bits.push(bit));
-    //   }
-    // }
     return bits
   }
 
   static fromBits(bits: Bool[] | boolean[]): StringCircuitValue {
-    console.log(`Bits Length: ${bits.length}`);
     if (typeof (bits[0]) != 'boolean') {
       bits = bits.map(x => x.toBoolean())
     }
