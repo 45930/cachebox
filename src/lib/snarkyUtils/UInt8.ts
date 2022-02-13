@@ -68,7 +68,6 @@ export class UInt8 extends CircuitValue {
   }
 
   static fromBits(bits: Bool[] | boolean[]): UInt8 {
-    console.assert(bits.length == 7, 'expected 256 bits')
     return this.fromNumber(bitsToNumber(bits));
   }
 
