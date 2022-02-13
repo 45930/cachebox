@@ -2,7 +2,7 @@
 	import { deployedSnappsStore } from '$lib/stores/deployedSnappStore';
 	import { loadSnarky as loadSnarkyGlobal, snarkyStore } from '$lib/stores/minaStore';
 
-	import type { MontyHallSnappInterface } from 'src/global';
+	import type { DeployedSnappInterface, MontyHallSnappInterface } from 'src/global';
 	import { onMount } from 'svelte';
 	import SnappCard from './_SnappCard.svelte';
 
@@ -19,11 +19,19 @@
 	const deploySnapp = async function () {
 		if (Object.keys(deployedSnapps).length == 0) {
 			let snappSourceCode = await import('$lib/snapps/montyHallSnapp');
-			const storeState = deployedSnapps;
+			let storeState = deployedSnapps;
 
 			const montyHallSnapp: MontyHallSnappInterface = await snappSourceCode.deploy();
 
 			storeState[montyHallSnapp.address.toJSON()['g']['x'].slice(0, 10)] = montyHallSnapp;
+			deployedSnappsStore.set(storeState);
+
+			snappSourceCode = await import('$lib/snapps/snappWithString');
+			storeState = deployedSnapps;
+
+			const snappWithString: DeployedSnappInterface = await snappSourceCode.deploy();
+
+			storeState[snappWithString.address.toJSON()['g']['x'].slice(0, 10)] = snappWithString;
 			deployedSnappsStore.set(storeState);
 		}
 	};
