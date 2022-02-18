@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Bool, CircuitValue, Field, Poseidon } from "snarkyjs";
 
 import { UInt8 } from './UInt8'
@@ -30,6 +32,30 @@ export class StringCircuitValue extends CircuitValue {
       uint.toBits().forEach(bit => bits.push(bit));
     });
     return bits
+  }
+
+  toField(): Field {
+    const values = this.value.map(x => x.value);
+    let field = Field.zero;
+
+    for (let i = 0, b = Field.one; i < Math.min(values.length, 31); i++, b = b.mul(256)) {
+      field = field.add(values[i].mul(b));
+    }
+    return field;
+  }
+
+  static fromField(field: Field): StringCircuitValue {
+    const values: UInt8[] = [];
+
+    const fieldConstant = field.toConstant()
+
+    fieldConstant.value[1].forEach((v) => {
+      values.push(UInt8.fromNumber(v))
+    });
+
+    const stringVal = new StringCircuitValue('');
+    stringVal.value = values;
+    return stringVal;
   }
 
   static fromBits(bits: Bool[] | boolean[]): StringCircuitValue {
