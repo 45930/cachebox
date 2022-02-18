@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { StringCircuitValue } from '../../src/lib/snarkyUtils/String';
 
 import pkg from 'bs58';
-import { Field } from 'snarkyjs';
+import { Field, Circuit } from 'snarkyjs';
 import { UInt8 } from '../../src/lib/snarkyUtils/UInt8';
 
 const bs58 = pkg;
@@ -25,6 +25,15 @@ describe('toString', () => {
     const input = 'Input String'
     const ztring = new StringCircuitValue(input);
     expect(ztring.toString()).to.eq(input);
+  });
+});
+
+describe('fromField', () => {
+  it('can serialize and deserialize from Field', () => {
+    const input = 'Input String 123'
+    const ztring = new StringCircuitValue(input);
+    const stringValue = StringCircuitValue.fromField(ztring.toField());
+    expect(stringValue.toString().replace(/\0/g, '')).to.eq(input);
   });
 });
 
