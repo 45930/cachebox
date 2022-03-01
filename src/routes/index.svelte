@@ -1,62 +1,49 @@
 <script lang="ts">
-	import { deployedSnappsStore } from '$lib/stores/deployedSnappStore';
-	import { loadSnarky as loadSnarkyGlobal, snarkyStore } from '$lib/stores/minaStore';
-
-	import type { DeployedSnappInterface, MontyHallSnappInterface } from 'src/global';
 	import { onMount } from 'svelte';
-	import SnappCard from './_SnappCard.svelte';
+	import { session } from '$app/stores';
 
-	let isSnarkyLoaded = $snarkyStore;
-	let deployedSnapps = $deployedSnappsStore;
-	let shouldRenderSnarkyComponents = false;
+	import { openModal } from 'svelte-modals';
+
+	import NewGameModal from '$lib/modals/newGameModal.svelte';
+	import { goto } from '$app/navigation';
+
+	let newPlayerName: string;
 
 	onMount(async () => {
-		loadSnarky().then(() => {
-			shouldRenderSnarkyComponents = true;
-		});
+		await getSession();
 	});
 
-	const deploySnapp = async function () {
-		if (Object.keys(deployedSnapps).length == 0) {
-			let snappSourceCode = await import('$lib/snapps/montyHallSnapp');
-			let storeState = deployedSnapps;
+	const getSession = async function () {
+		const sessionResp = await fetch('/gameState', {
+			headers: { 'content-type': 'application/json' },
+			method: 'GET'
+		});
 
-			const montyHallSnapp: MontyHallSnappInterface = await snappSourceCode.deploy();
+		const data = await sessionResp.json();
 
-			storeState[montyHallSnapp.address.toJSON()['g']['x'].slice(0, 10)] = montyHallSnapp;
-			deployedSnappsStore.set(storeState);
-
-			snappSourceCode = await import('$lib/snapps/snappWithString');
-			storeState = deployedSnapps;
-
-			const snappWithString: DeployedSnappInterface = await snappSourceCode.deploy();
-
-			storeState[snappWithString.address.toJSON()['g']['x'].slice(0, 10)] = snappWithString;
-			deployedSnappsStore.set(storeState);
-		}
+		$session = data;
 	};
 
-	const loadSnarky = async function () {
-		if (!isSnarkyLoaded) {
-			await loadSnarkyGlobal();
-			await deploySnapp();
-		}
+	const openNewGameModal = function () {
+		openModal(NewGameModal, { getSession: getSession });
 	};
 </script>
 
-<div>
-	<div class="justify-center mx-auto mb-16">
-		<p class="text-xl font-bold">Available Puzzles</p>
+<div class="justify-center flex flex-wrap">
+	<div
+		on:click={() => openNewGameModal()}
+		class="justify-center mx-auto mb-16 border-2 border-solid border-sky-800 rounded px-2 py-2"
+	>
+		<p class="text-xl font-bold">NEW GAME</p>
 	</div>
-	<div class="container flex justify-center">
-		{#if shouldRenderSnarkyComponents}
-			<div class="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-				{#each Object.keys(deployedSnapps) as address}
-					<SnappCard {address} />
-				{/each}
-			</div>
-		{:else}
-			<div>Waiting for snarky to load...</div>
-		{/if}
-	</div>
+	<div class="w-full" />
+	{#if $session.user != 'null_user'}
+		<div
+			on:click={() => goto('/play')}
+			class="justify-center mx-auto mb-16 border-2 border-solid border-sky-800 rounded px-2 py-2"
+		>
+			<p class="text-xl font-bold">CONTINUE GAME</p>
+			<p>Current Game State: {JSON.stringify($session)}</p>
+		</div>
+	{/if}
 </div>

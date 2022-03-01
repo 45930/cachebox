@@ -43,6 +43,8 @@
     "@types/node-static": "^0.7.7",
     "node-static": "^0.7.11",
     "snarkyjs": "^0.2.0",
+    "svelte-kit-cookie-session": "^2.1.2",
+    "svelte-modals": "^1.1.0",
     "ts-node": "^10.5.0"
   }
 }
