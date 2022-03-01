@@ -23,6 +23,9 @@ const config = {
 			out: 'build'
 		}),
 		vite: () => ({
+			optimizeDeps: {
+				exclude: ["svelte-kit-cookie-session"],
+			},
 			build: {
 				target: ['esnext']
 			},
