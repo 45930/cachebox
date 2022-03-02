@@ -1,0 +1,75 @@
+import { readable } from 'svelte/store';
+
+const stepsConfig = {
+  1: {
+    "message": [
+      "Welcome to the game.",
+      "Choose an action below, then enter the secret phrase once you know."
+    ],
+    "toSteps": [
+      {
+        "id": 2,
+        "prompt": "Examine article 1"
+      },
+      {
+        "id": 3,
+        "prompt": "Look behind object 2"
+      },
+      {
+        "id": 4,
+        "prompt": "Talk to character 3"
+      }
+    ],
+    "snapp": {
+      "key": "secretPhrase",
+      "methods": [
+        {
+          "name": "guessPhrase",
+          "label": "What is the secret phrase?",
+          "inputs": [
+            {
+              "label": "",
+              "dtype": "string",
+              "value": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  2: {
+    "message": [
+      "You chose option 1 - you learn that the first word is 'mina'"
+    ],
+    "toSteps": [
+      {
+        "id": 1,
+        "prompt": "Return Home"
+      }
+    ]
+  },
+  3: {
+    "message": [
+      "You chose option 2 - you learn that the second word is 'is'"
+    ],
+    "toSteps": [
+      {
+        "id": 1,
+        "prompt": "Return Home"
+      }
+    ]
+  },
+  4: {
+    "message": [
+      "You chose option 3 - you learn that the third word is 'cool'"
+    ],
+    "toSteps": [
+      {
+        "id": 1,
+        "prompt": "Return Home"
+      }
+    ]
+  }
+}
+
+export const gameStepStore = readable(stepsConfig);

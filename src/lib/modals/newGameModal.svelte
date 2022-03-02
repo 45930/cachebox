@@ -12,6 +12,7 @@
 	const onSubmit = async function () {
 		const sessionToCreate: SessionData = {
 			user: username,
+			step: 1,
 			other: ''
 		};
 

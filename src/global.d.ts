@@ -22,3 +22,10 @@ interface MontyHallSnappInterface extends DeployedSnappInterface {
     guessedDoor: sting;
   }>;
 }
+
+interface SecretPhraseSnappInterface extends DeployedSnappInterface {
+  guessPhrase(phrase: string): Promise<string>;
+  getSnappState(): Promise<{
+    secretPhraseHash: string;
+  }>;
+}
