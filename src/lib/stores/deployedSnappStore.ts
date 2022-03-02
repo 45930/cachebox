@@ -1,15 +1,12 @@
-
+import type { PublicKey } from 'snarkyjs';
 import type { DeployedSnappInterface } from 'src/global';
-import { derived, writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 
-export const addressMap: Record<string, DeployedSnappInterface> = {}
-
-export const address = writable('');
-
-export const updateAddress = (newAddress) => {
-  address.set(newAddress)
+type SnappConfig = {
+  interface: DeployedSnappInterface,
+  address: PublicKey
 }
 
-export const deployedSnappStore = derived([address], ([$address]) => addressMap[$address]);
+const snapps: Record<string, SnappConfig> = {};
 
-export const deployedSnappsStore = writable(addressMap);
+export const deployedSnappsStore = writable(snapps);
