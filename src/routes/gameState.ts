@@ -1,7 +1,8 @@
 import type { RequestHandler } from "@sveltejs/kit";
 
-const EMPTY_SESSION: GameSession = {
+const EMPTY_SESSION: SessionData = {
   user: 'null_user',
+  step: null,
   other: ''
 }
 
@@ -15,7 +16,7 @@ export const get: RequestHandler = ({ locals }) => {
 
 // set the state to incoming object
 export const post: RequestHandler = async function (params) {
-  const newGameState: GameSession = await params.request.json();
+  const newGameState: SessionData = await params.request.json();
   params.locals.session.data = newGameState;
 
   return { body: { ...params.locals.session.data } };
