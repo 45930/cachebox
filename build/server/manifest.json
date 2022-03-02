@@ -1,0 +1,88 @@
+{
+  ".svelte-kit/build/index.js": {
+    "file": "index.js",
+    "src": ".svelte-kit/build/index.js",
+    "isEntry": true,
+    "imports": [
+      "_index-7c21a753.js"
+    ]
+  },
+  "src/routes/gameState.ts": {
+    "file": "entries/endpoints/gameState.ts.js",
+    "src": "src/routes/gameState.ts",
+    "isEntry": true
+  },
+  "src/routes/__layout.svelte": {
+    "file": "entries/pages/__layout.svelte.js",
+    "src": "src/routes/__layout.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-7c21a753.js",
+      "_index-6b8fbbc5.js"
+    ],
+    "css": [
+      "assets/entries/pages/__layout.svelte-c3475687.css"
+    ]
+  },
+  ".svelte-kit/runtime/components/error.svelte": {
+    "file": "entries/pages/error.svelte.js",
+    "src": ".svelte-kit/runtime/components/error.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-7c21a753.js"
+    ]
+  },
+  "src/routes/index.svelte": {
+    "file": "entries/pages/index.svelte.js",
+    "src": "src/routes/index.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-7c21a753.js",
+      "_stores-8bd02fcb.js"
+    ],
+    "css": [
+      "assets/entries/pages/index.svelte-570aae23.css"
+    ]
+  },
+  "src/routes/about/index.svelte": {
+    "file": "entries/pages/about/index.svelte.js",
+    "src": "src/routes/about/index.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-7c21a753.js"
+    ]
+  },
+  "src/routes/play/index.svelte": {
+    "file": "entries/pages/play/index.svelte.js",
+    "src": "src/routes/play/index.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-7c21a753.js",
+      "_stores-8bd02fcb.js"
+    ]
+  },
+  "src/routes/play/scene-[i]/index.svelte": {
+    "file": "entries/pages/play/scene-_i_/index.svelte.js",
+    "src": "src/routes/play/scene-[i]/index.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-7c21a753.js",
+      "_index-6b8fbbc5.js"
+    ]
+  },
+  "_index-7c21a753.js": {
+    "file": "chunks/index-7c21a753.js"
+  },
+  "_index-6b8fbbc5.js": {
+    "file": "chunks/index-6b8fbbc5.js",
+    "imports": [
+      "_index-7c21a753.js"
+    ]
+  },
+  "_stores-8bd02fcb.js": {
+    "file": "chunks/stores-8bd02fcb.js",
+    "imports": [
+      "_index-7c21a753.js"
+    ]
+  }
+}
