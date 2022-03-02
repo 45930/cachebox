@@ -64,7 +64,7 @@
 	<div id="choices">
 		{#each stepConfig.toSteps as toStep}
 			<div
-				on:click={() => goto(`/play/scene-${toStep.id}`, { replaceState: true })}
+				on:click={() => goto(`/play/scene-${toStep.id}`)}
 				class="justify-center mx-auto mb-16 border-2 border-solid border-sky-800 rounded px-2 py-2"
 			>
 				{toStep.prompt}
