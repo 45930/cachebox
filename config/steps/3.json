@@ -1,0 +1,11 @@
+{
+  "message": [
+    "You chose option 2 - you learn that the second word is 'is'"
+  ],
+  "toSteps": [
+    {
+      "id": 1,
+      "prompt": "Return Home"
+    }
+  ]
+}

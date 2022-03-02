@@ -1,0 +1,34 @@
+{
+  "message": [
+    "Welcome to the game.",
+    "Choose an action below, then enter the secret phrase once you know."
+  ],
+  "toSteps": [
+    {
+      "id": 2,
+      "prompt": "Examine article 1"
+    }, 
+    {
+      "id": 3,
+      "prompt": "Look behind object 2"
+    },
+    {
+      "id": 4,
+      "prompt": "Talk to character 3"
+    }
+  ],
+  "snapp": {
+    "key": "secretPhrase",
+    "methods": {
+      "guessPhrase": {
+        "label": "What is the secret phrase?",
+        "inputs": [
+          {
+            "label": "",
+            "dtype": "string"
+          }
+        ]
+      }
+    }
+  }
+}

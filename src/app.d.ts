@@ -1,5 +1,6 @@
 interface SessionData {
   user: string;
+  step: number;
   other: string;
 }
 
