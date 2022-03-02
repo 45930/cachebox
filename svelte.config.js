@@ -25,7 +25,8 @@ const config = {
 			env: {
 				headers: {
 					'Cross-Origin-Embedder-Policy': 'CO_EMBEDDER_POLICY',
-					'Cross-Origin-Opener-Policy': 'CO_OPENER_POLICY'
+					'Cross-Origin-Opener-Policy': 'CO_OPENER_POLICY',
+					'Cache-Control': 'CACHE_CONTROL'
 				}
 			}
 		}),
