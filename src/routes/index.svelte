@@ -21,6 +21,7 @@
 
 		const data = await sessionResp.json();
 
+		console.log(data);
 		$session = data;
 	};
 
@@ -37,9 +38,9 @@
 		<p class="text-xl font-bold">NEW GAME</p>
 	</div>
 	<div class="w-full" />
-	{#if $session.user != 'null_user'}
+	{#if $session && $session.user != 'null_user'}
 		<div
-			on:click={() => goto('/play')}
+			on:click={() => goto('/play/scene-1')}
 			class="justify-center mx-auto mb-16 border-2 border-solid border-sky-800 rounded px-2 py-2"
 		>
 			<p class="text-xl font-bold">CONTINUE GAME</p>
