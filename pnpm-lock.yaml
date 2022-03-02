@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@sveltejs/adapter-auto': next
+  '@sveltejs/adapter-node': ^1.0.0-next.70
   '@sveltejs/adapter-static': ^1.0.0-next.28
   '@sveltejs/kit': next
   '@types/chai': ^4.3.0
@@ -32,6 +33,7 @@ specifiers:
   typescript: ^4.4.3
 
 dependencies:
+  '@sveltejs/adapter-node': 1.0.0-next.70
   '@sveltejs/adapter-static': 1.0.0-next.28
   '@types/node-static': 0.7.7
   node-static: 0.7.11
@@ -192,6 +194,12 @@ packages:
       tiny-glob: 0.2.9
     dev: true
 
+  /@sveltejs/adapter-node/1.0.0-next.70:
+    resolution: {integrity: sha512-9EtqSTxVOipESyPQH8uVdkl+iSqsq3oRKS3RZoE2vAG9I849MuTTxr1g9L4kALbXaklsYRztwhmrLpTdcSM4vA==}
+    dependencies:
+      tiny-glob: 0.2.9
+    dev: false
+
   /@sveltejs/adapter-static/1.0.0-next.28:
     resolution: {integrity: sha512-c4xLyeSwnbGQxe4f1SLpHTbxZDm3TEr43scR3tOlVgQN+mnAL9aDdl3nTtdzWmrUDmDEmY4GriAwLyFLZuINLw==}
     dependencies:
@@ -211,10 +219,10 @@ packages:
     peerDependencies:
       svelte: ^3.44.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 1.0.0-next.38_svelte@3.46.4+vite@2.8.5
+      '@sveltejs/vite-plugin-svelte': 1.0.0-next.38_svelte@3.46.4+vite@2.8.6
       sade: 1.8.1
       svelte: 3.46.4
-      vite: 2.8.5
+      vite: 2.8.6
     transitivePeerDependencies:
       - diff-match-patch
       - less
@@ -223,7 +231,7 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/vite-plugin-svelte/1.0.0-next.38_svelte@3.46.4+vite@2.8.5:
+  /@sveltejs/vite-plugin-svelte/1.0.0-next.38_svelte@3.46.4+vite@2.8.6:
     resolution: {integrity: sha512-epYAVZvfpiDZwB4Whe5AALk3zF5odKFf8Vx4q2tth+QuXmr0GLZ13ri02zINS6pHRCx+GjtOqCEEwMaPAfPcgQ==}
     engines: {node: ^14.13.1 || >= 16}
     peerDependencies:
@@ -240,7 +248,7 @@ packages:
       magic-string: 0.25.7
       svelte: 3.46.4
       svelte-hmr: 0.14.9_svelte@3.46.4
-      vite: 2.8.5
+      vite: 2.8.6
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2417,8 +2425,8 @@ packages:
     resolution: {integrity: sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==}
     dev: true
 
-  /vite/2.8.5:
-    resolution: {integrity: sha512-C/7EGNa1ugWejol6nOcd/0d8PR70Nzd+XXwsPbnNOfzZw0NN2xyXfmw/GNDHgr5fcaTSO4gjxCJCrwNhQUMhmA==}
+  /vite/2.8.6:
+    resolution: {integrity: sha512-e4H0QpludOVKkmOsRyqQ7LTcMUDF3mcgyNU4lmi0B5JUbe0ZxeBBl8VoZ8Y6Rfn9eFKYtdXNPcYK97ZwH+K2ug==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:

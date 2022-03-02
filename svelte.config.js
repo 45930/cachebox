@@ -1,4 +1,5 @@
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-node';
+// import adapter from '@sveltejs/adapter-static';
 import autoprefixer from 'autoprefixer'
 import preprocess from 'svelte-preprocess';
 import tailwind from 'tailwindcss';
@@ -20,7 +21,13 @@ const config = {
 
 	kit: {
 		adapter: adapter({
-			out: 'build'
+			out: 'build',
+			env: {
+				headers: {
+					'Cross-Origin-Embedder-Policy': 'require-corp',
+					'Cross-Origin-Opener-Policy': 'same-origin'
+				}
+			}
 		}),
 		vite: () => ({
 			optimizeDeps: {
