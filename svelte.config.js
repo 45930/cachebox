@@ -24,8 +24,8 @@ const config = {
 			out: 'build',
 			env: {
 				headers: {
-					'Cross-Origin-Embedder-Policy': 'require-corp',
-					'Cross-Origin-Opener-Policy': 'same-origin'
+					'Cross-Origin-Embedder-Policy': 'CO_EMBEDDER_POLICY',
+					'Cross-Origin-Opener-Policy': 'CO_OPENER_POLICY'
 				}
 			}
 		}),
