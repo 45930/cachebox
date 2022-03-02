@@ -25,7 +25,7 @@
 		getSession();
 
 		closeModal();
-		goto('/play');
+		goto('/play/scene-1');
 	};
 </script>
 
