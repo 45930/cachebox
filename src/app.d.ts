@@ -1,7 +1,6 @@
 interface SessionData {
   user: string;
-  step: number;
-  other: string;
+  tile: string;
 }
 
 // See https://kit.svelte.dev/docs#typescript

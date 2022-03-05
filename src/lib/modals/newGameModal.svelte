@@ -12,8 +12,7 @@
 	const onSubmit = async function () {
 		const sessionToCreate: SessionData = {
 			user: username,
-			step: 1,
-			other: ''
+			tile: 'beach_landing'
 		};
 
 		await fetch('/gameState', {
@@ -25,7 +24,7 @@
 		getSession();
 
 		closeModal();
-		goto('/play/scene-1');
+		goto('/play/beach_landing');
 	};
 </script>
 
