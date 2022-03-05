@@ -3,7 +3,13 @@ module.exports = {
     "./src/**/*.{html,svelte}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        'lg': '32rem',
+        'xl': '36rem',
+        '2xl': '42rem',
+      }
+    },
   },
   plugins: []
 }
