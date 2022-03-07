@@ -33,9 +33,9 @@
 		const winner = await escapeGameSnapp.guessGateKey(key);
 
 		if (winner == 'winner') {
-			console.log('winner');
+			goto('/play/winner');
 		} else {
-			console.log('loser');
+			goto('/play/loser');
 		}
 	};
 

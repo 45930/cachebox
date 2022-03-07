@@ -1,6 +1,6 @@
 import * as module from '../entries/pages/index.svelte.js';
 
 export { module };
-export const entry = 'pages/index.svelte-3fe7fb7c.js';
-export const js = ["pages/index.svelte-3fe7fb7c.js","chunks/vendor-c7513497.js","chunks/stores-e54798f8.js","chunks/navigation-bd39ff07.js","chunks/singletons-a6a7384f.js"];
+export const entry = 'pages/index.svelte-b0fdbfb9.js';
+export const js = ["pages/index.svelte-b0fdbfb9.js","chunks/vendor-77d161ad.js","chunks/stores-529f546e.js","chunks/navigation-c0b2019f.js","chunks/singletons-a6a7384f.js"];
 export const css = ["assets/pages/index.svelte-1856c6ef.css"];
