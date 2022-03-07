@@ -1,10 +1,16 @@
 <script lang="ts">
+	import { afterNavigate } from '$app/navigation';
+
 	import LineBreak from '$lib/lineBreak.svelte';
 
 	export let prompt: string[];
 
-	let currentPromptIndex = 0;
+	$: currentPromptIndex = 0;
 	$: currentPromptSegment = prompt[currentPromptIndex];
+
+	afterNavigate(() => {
+		currentPromptIndex = 0;
+	});
 </script>
 
 <div id="tile-prompt" class="max-w-md mb-4 p-2 rounded border-neutral-200 border-solid border-2">
