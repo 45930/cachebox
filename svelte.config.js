@@ -30,6 +30,10 @@ const config = {
 				}
 			}
 		}),
+		prerender: {
+			enabled: false,
+		},
+
 		vite: () => ({
 			optimizeDeps: {
 				exclude: ["svelte-kit-cookie-session"],

@@ -1,10 +1,10 @@
 {
   ".svelte-kit/runtime/client/start.js": {
-    "file": "start-3fa6ce65.js",
+    "file": "start-1499b0fa.js",
     "src": ".svelte-kit/runtime/client/start.js",
     "isEntry": true,
     "imports": [
-      "_vendor-c7513497.js",
+      "_vendor-77d161ad.js",
       "_preload-helper-e4860ae8.js",
       "_singletons-a6a7384f.js"
     ],
@@ -14,39 +14,42 @@
       "src/routes/index.svelte",
       "src/routes/about/index.svelte",
       "src/routes/play/index.svelte",
-      "src/routes/play/scene-[i]/index.svelte"
+      "src/routes/play/clearing.svelte",
+      "src/routes/play/marcus.svelte",
+      "src/routes/play/merlin.svelte",
+      "src/routes/play/[tile_id]/index.svelte"
     ]
   },
   "src/routes/__layout.svelte": {
-    "file": "pages/__layout.svelte-bce815f7.js",
+    "file": "pages/__layout.svelte-897da0e4.js",
     "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-c7513497.js"
+      "_vendor-77d161ad.js"
     ],
     "css": [
-      "assets/pages/__layout.svelte-8673b41b.css"
+      "assets/pages/__layout.svelte-26fbb49f.css"
     ]
   },
   ".svelte-kit/runtime/components/error.svelte": {
-    "file": "error.svelte-07479d97.js",
+    "file": "error.svelte-9ddb35cb.js",
     "src": ".svelte-kit/runtime/components/error.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-c7513497.js"
+      "_vendor-77d161ad.js"
     ]
   },
   "src/routes/index.svelte": {
-    "file": "pages/index.svelte-3fe7fb7c.js",
+    "file": "pages/index.svelte-b0fdbfb9.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-c7513497.js",
-      "_stores-e54798f8.js",
-      "_navigation-bd39ff07.js",
+      "_vendor-77d161ad.js",
+      "_stores-529f546e.js",
+      "_navigation-c0b2019f.js",
       "_singletons-a6a7384f.js"
     ],
     "css": [
@@ -54,42 +57,85 @@
     ]
   },
   "src/routes/about/index.svelte": {
-    "file": "pages/about/index.svelte-4a2bcac2.js",
+    "file": "pages/about/index.svelte-88e63336.js",
     "src": "src/routes/about/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-c7513497.js"
+      "_vendor-77d161ad.js"
     ]
   },
   "src/routes/play/index.svelte": {
-    "file": "pages/play/index.svelte-888b3707.js",
+    "file": "pages/play/index.svelte-0b3ed047.js",
     "src": "src/routes/play/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-c7513497.js",
-      "_stores-e54798f8.js"
+      "_vendor-77d161ad.js",
+      "_stores-529f546e.js"
     ]
   },
-  "src/routes/play/scene-[i]/index.svelte": {
-    "file": "pages/play/scene-_i_/index.svelte-ea8b9565.js",
-    "src": "src/routes/play/scene-[i]/index.svelte",
+  "src/routes/play/clearing.svelte": {
+    "file": "pages/play/clearing.svelte-b3a14244.js",
+    "src": "src/routes/play/clearing.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
+      "_vendor-77d161ad.js",
+      "__tileMovements-f91a8224.js",
+      "__tileInteractions-9c3c4194.js",
+      "_navigation-c0b2019f.js",
       "_preload-helper-e4860ae8.js",
-      "_vendor-c7513497.js",
-      "_navigation-bd39ff07.js",
       "_singletons-a6a7384f.js"
     ],
     "dynamicImports": [
-      "src/lib/snapps/montyHallSnapp.ts",
-      "src/lib/snapps/secretPhraseSnapp.ts"
+      "src/lib/snapps/escapeGameSnapp.ts"
+    ],
+    "css": [
+      "assets/pages/play/clearing.svelte-77edf091.css"
     ]
   },
-  "_vendor-c7513497.js": {
-    "file": "chunks/vendor-c7513497.js"
+  "src/routes/play/marcus.svelte": {
+    "file": "pages/play/marcus.svelte-f793762b.js",
+    "src": "src/routes/play/marcus.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_vendor-77d161ad.js",
+      "__mBrother-68454496.js",
+      "__tileMovements-f91a8224.js",
+      "_navigation-c0b2019f.js",
+      "_singletons-a6a7384f.js"
+    ]
+  },
+  "src/routes/play/merlin.svelte": {
+    "file": "pages/play/merlin.svelte-09f3ea5b.js",
+    "src": "src/routes/play/merlin.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_vendor-77d161ad.js",
+      "__mBrother-68454496.js",
+      "__tileMovements-f91a8224.js",
+      "_navigation-c0b2019f.js",
+      "_singletons-a6a7384f.js"
+    ]
+  },
+  "src/routes/play/[tile_id]/index.svelte": {
+    "file": "pages/play/_tile_id_/index.svelte-3d8889b4.js",
+    "src": "src/routes/play/[tile_id]/index.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_vendor-77d161ad.js",
+      "__tileMovements-f91a8224.js",
+      "__tileInteractions-9c3c4194.js",
+      "_navigation-c0b2019f.js",
+      "_singletons-a6a7384f.js"
+    ]
+  },
+  "_vendor-77d161ad.js": {
+    "file": "chunks/vendor-77d161ad.js"
   },
   "_singletons-a6a7384f.js": {
     "file": "chunks/singletons-a6a7384f.js"
@@ -97,35 +143,43 @@
   "_preload-helper-e4860ae8.js": {
     "file": "chunks/preload-helper-e4860ae8.js"
   },
-  "_stores-e54798f8.js": {
-    "file": "chunks/stores-e54798f8.js",
+  "_stores-529f546e.js": {
+    "file": "chunks/stores-529f546e.js",
     "imports": [
-      "_vendor-c7513497.js"
+      "_vendor-77d161ad.js"
     ]
   },
-  "_navigation-bd39ff07.js": {
-    "file": "chunks/navigation-bd39ff07.js",
+  "_navigation-c0b2019f.js": {
+    "file": "chunks/navigation-c0b2019f.js",
     "imports": [
       "_singletons-a6a7384f.js"
     ]
   },
-  "src/lib/snapps/secretPhraseSnapp.ts": {
-    "file": "chunks/secretPhraseSnapp-b33ec8eb.js",
-    "src": "src/lib/snapps/secretPhraseSnapp.ts",
-    "isDynamicEntry": true,
+  "__tileMovements-f91a8224.js": {
+    "file": "chunks/_tileMovements-f91a8224.js",
     "imports": [
-      "_index-b3f6643b.js"
+      "_vendor-77d161ad.js",
+      "_navigation-c0b2019f.js"
     ]
   },
-  "_index-b3f6643b.js": {
-    "file": "chunks/index-b3f6643b.js"
-  },
-  "src/lib/snapps/montyHallSnapp.ts": {
-    "file": "chunks/montyHallSnapp-dc64f1fd.js",
-    "src": "src/lib/snapps/montyHallSnapp.ts",
-    "isDynamicEntry": true,
+  "__tileInteractions-9c3c4194.js": {
+    "file": "chunks/_tileInteractions-9c3c4194.js",
     "imports": [
-      "_index-b3f6643b.js"
+      "_vendor-77d161ad.js",
+      "_navigation-c0b2019f.js",
+      "__tileMovements-f91a8224.js"
     ]
+  },
+  "__mBrother-68454496.js": {
+    "file": "chunks/_mBrother-68454496.js",
+    "imports": [
+      "_vendor-77d161ad.js",
+      "__tileMovements-f91a8224.js"
+    ]
+  },
+  "src/lib/snapps/escapeGameSnapp.ts": {
+    "file": "chunks/escapeGameSnapp-b74d24d2.js",
+    "src": "src/lib/snapps/escapeGameSnapp.ts",
+    "isDynamicEntry": true
   }
 }

@@ -1,4 +1,5 @@
-import { c as create_ssr_component, s as setContext, v as validate_component, m as missing_component } from "./chunks/index-7c21a753.js";
+import { c as create_ssr_component, s as setContext, v as validate_component, m as missing_component } from "./chunks/index-f3d7dd3c.js";
+import { sequence } from "@sveltejs/kit/hooks";
 import { handleSession } from "svelte-kit-cookie-session";
 function afterUpdate() {
 }
@@ -1890,16 +1891,18 @@ function set_paths(paths) {
 }
 function set_prerendering(value) {
 }
-const handle = handleSession({
+const _handleSession = handleSession({
   secret: "A_VERY_SECRET_SECRET_32_CHARS_LONG"
-}, async function({ event, resolve: resolve2 }) {
+});
+const handleRequest = async function({ event, resolve: resolve2 }) {
   const response = await resolve2(event, {
     ssr: false
   });
   response.headers.set("Cross-Origin-Embedder-Policy", "require-corp");
   response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
   return response;
-});
+};
+const handle = sequence(_handleSession, handleRequest);
 const getSession = function({ locals }) {
   return locals.session.data;
 };
@@ -1950,7 +1953,7 @@ class Server {
       method_override: { "parameter": "_method", "allowed": [] },
       paths: { base, assets },
       prefix: assets + "/_app/",
-      prerender: true,
+      prerender: false,
       read,
       root: Root,
       service_worker: null,
