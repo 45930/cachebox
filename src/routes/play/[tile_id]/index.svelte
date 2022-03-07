@@ -10,15 +10,15 @@
 
 <script lang="ts">
 	import { locationStore } from '$lib/stores/locationStore';
-	import TilePrompt from '../_tilePrompt.svelte';
+	import TilePrompt from './_tilePrompt.svelte';
 	import LineBreak from '$lib/lineBreak.svelte';
-	import TileInteractions from '../_tileInteractions.svelte';
-	import TileMovements from '../_tileMovements.svelte';
-	import { onMount } from 'svelte';
+	import TileInteractions from './_tileInteractions.svelte';
+	import TileMovements from './_tileMovements.svelte';
+	import { afterNavigate } from '$app/navigation';
 
 	export let tile;
 
-	onMount(() => {
+	afterNavigate(() => {
 		fetch('/gameState', {
 			headers: { 'content-type': 'application/json' },
 			method: 'PUT',

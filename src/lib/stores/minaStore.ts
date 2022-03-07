@@ -1,11 +1,16 @@
+import type { EscapeGameSnappInterface } from 'src/global';
 import { writable } from 'svelte/store';
 
-const isSnarkyLoaded = false;
-
 export const loadSnarky = async function () {
-  const snappSourceCode = await import('$lib/snapps/montyHallSnapp');
+  const snappSourceCode = await import('$lib/snapps/escapeGameSnapp');
   await snappSourceCode.load();
   snarkyStore.set(true)
+  const escapeGameSnapp = await snappSourceCode.deploy();
+  deployedSnappsStore.set(escapeGameSnapp)
 }
 
-export const snarkyStore = writable(isSnarkyLoaded);
+export const snarkyStore = writable(false);
+export const deployedSnappsStore = writable<EscapeGameSnappInterface>();
+
+
+
