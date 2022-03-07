@@ -1,13 +1,7 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { deployedSnappsStore } from '$lib/stores/deployedSnappStore';
 	import { locationStore } from '$lib/stores/locationStore';
-	import { loadSnarky as loadSnarkyGlobal, snarkyStore } from '$lib/stores/minaStore';
-	import { onMount } from 'svelte';
-	import type { SecretPhraseSnappInterface } from 'src/global';
 	import LineBreak from '$lib/lineBreak.svelte';
-	import { action } from 'svelte-modals';
-	import TileMovements from './_tileMovements.svelte';
+	import TileMovements from './[tile_id]/_tileMovements.svelte';
 	import { InteractionType } from '$lib/enums';
 
 	export let name;
