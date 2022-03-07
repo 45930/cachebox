@@ -122,10 +122,10 @@ const locations: Record<string, Tile> = {
       "No one seems to be around..."
     ],
     movements: [
-      {
-        prompt: "Enter the shack",
-        to: "in_shack"
-      },
+      // {
+      //   prompt: "Enter the shack",
+      //   to: "in_shack"
+      // },
       {
         prompt: "Go further into the clearing",
         to: "clearing"
@@ -263,7 +263,34 @@ const locations: Record<string, Tile> = {
         to: "shack"
       }
     ]
-  }
+  },
+  winner: {
+    id: "winner",
+    title: "Winner",
+    prompt: [
+      "You have completed the game so far, congratulations"
+    ],
+    movements: [
+      {
+        prompt: "Return to the clearing",
+        to: "clearing"
+      }
+    ]
+  },
+  loser: {
+    id: "loser",
+    title: "Loser",
+    prompt: [
+      "You entered the wrong key code and tripped a booby trap.",
+      "Try again and make sure you listen carefully to Merlin and Marcus"
+    ],
+    movements: [
+      {
+        prompt: "Play Again",
+        to: "beach_landing"
+      }
+    ]
+  },
 }
 
 export const locationStore = readable(locations);
