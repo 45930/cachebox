@@ -30,16 +30,16 @@
 
 	const onClearingModalSubmit = async (key: string) => {
 		const escapeGameSnapp = $deployedSnappsStore;
-		const winner = await escapeGameSnapp.guessGateKey(key);
+		const winner = await escapeGameSnapp.guessLabKey(key);
 
 		if (winner == 'winner') {
-			goto('/play/lab_hall');
+			goto('/play/winner');
 		} else {
 			goto('/play/loser');
 		}
 	};
 
-	$: tileConfig = $locationStore['clearing'];
+	$: tileConfig = $locationStore['lab_hall'];
 </script>
 
 <div class="container flex justify-center flex-wrap">

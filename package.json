@@ -19,7 +19,6 @@
   "devDependencies": {
     "@sveltejs/adapter-auto": "next",
     "@sveltejs/adapter-node": "^1.0.0-next.70",
-    "@sveltejs/kit": "next",
     "@types/chai": "^4.3.0",
     "@types/mocha": "^9.1.0",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
@@ -43,6 +42,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@sveltejs/kit": "next",
     "@types/node-static": "^0.7.7",
     "node-static": "^0.7.11",
     "snarkyjs": "^0.2.0",

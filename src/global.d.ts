@@ -33,6 +33,7 @@ interface SecretPhraseSnappInterface extends DeployedSnappInterface {
 
 interface EscapeGameSnappInterface extends DeployedSnappInterface {
   guessGateKey(key: string): Promise<string>;
+  guessLabKey(key: string): Promise<string>;
   getSnappState(): Promise<{
     gateKey: string;
   }>;

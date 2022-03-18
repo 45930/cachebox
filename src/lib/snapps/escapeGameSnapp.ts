@@ -21,16 +21,29 @@ class EscapeGameSnapp extends SmartContract {
   constructor(address: PublicKey) {
     super(address);
     this.gateKey = State();
+    this.labKey = State();
   }
 
-  deploy(initialBalance: UInt64, gateKey: StringCircuitValue) {
+  deploy(initialBalance: UInt64, gateKey: StringCircuitValue, labKey: StringCircuitValue) {
     super.deploy();
     this.balance.addInPlace(initialBalance);
     this.gateKey.set(gateKey.toField());
+    this.labKey.set(labKey.toField());
   }
 
   async guessGateKey(key: StringCircuitValue) {
     const gateKeyHash = await this.gateKey.get();
+    const isCorrect = Circuit.if(
+      gateKeyHash.equals(key.hash()),
+      new Bool(true),
+      new Bool(false),
+    )
+
+    return isCorrect;
+  }
+
+  async guessLabKey(key: StringCircuitValue) {
+    const gateKeyHash = await this.labKey.get();
     const isCorrect = Circuit.if(
       gateKeyHash.equals(key.hash()),
       new Bool(true),
@@ -45,10 +58,14 @@ class EscapeGameSnapp extends SmartContract {
 
 // @state(Field) gateKey
 state(Field)(EscapeGameSnapp.prototype, 'gateKey');
+state(Field)(EscapeGameSnapp.prototype, 'labKey');
 
 // @method
-Reflect.metadata('design:paramtypes', [String])(EscapeGameSnapp.prototype, 'guessKey');
-method(EscapeGameSnapp.prototype, 'guessKey');
+Reflect.metadata('design:paramtypes', [String])(EscapeGameSnapp.prototype, 'guessGateKey');
+method(EscapeGameSnapp.prototype, 'guessGateKey');
+
+Reflect.metadata('design:paramtypes', [String])(EscapeGameSnapp.prototype, 'guessLabKey');
+method(EscapeGameSnapp.prototype, 'guessLabKey');
 
 export async function deploy() {
   const snappPrivkey = PrivateKey.random();
@@ -59,6 +76,9 @@ export async function deploy() {
     title: 'Escape Game Snapp',
     guessGateKey(phrase: string) {
       return guessGateKey(snappAddress, phrase);
+    },
+    guessLabKey(phrase: string) {
+      return guessLabKey(snappAddress, phrase);
     },
     getSnappState() {
       return getSnappState(snappAddress);
@@ -71,9 +91,10 @@ export async function deploy() {
   const tx = Mina.transaction(DEPLOYER_ACCOUNT, async () => {
     console.log('Deploying Escape Game Snapp...');
     const p = await Party.createSigned(USER_ACCOUNT);
-    const key = new StringCircuitValue('16171');
+    const gateKey = new StringCircuitValue('00000');
+    const labKey = new StringCircuitValue('00000');
     p.balance.subInPlace(ONE_MINA);
-    snapp.deploy(ONE_MINA, key);
+    snapp.deploy(ONE_MINA, gateKey, labKey);
     console.log(snapp);
   });
   await tx.send().wait();
@@ -90,7 +111,8 @@ export async function getSnappState(snappAddress: PublicKey) {
   console.log(Local)
   const snappState = (await Mina.getAccount(snappAddress)).snapp.appState;
   const gateKey = StringCircuitValue.fromField(snappState[0]).toString();
-  return { gateKey };
+  const labKey = StringCircuitValue.fromField(snappState[1]).toString();
+  return { gateKey, labKey };
 }
 
 export async function guessGateKey(snappAddress: PublicKey, key: string) {
@@ -108,6 +130,29 @@ export async function guessGateKey(snappAddress: PublicKey, key: string) {
 
   // TODO: need a better way to store winners, ideally leverage off-chain storage from another team
   const trueKey = (await getSnappState(snappAddress)).gateKey;
+  console.log(`True Key: ${trueKey}`)
+  if (key == trueKey.replace(/\0/g, '')) {
+    return 'winner'
+  } else {
+    return 'loser'
+  }
+}
+
+export async function guessLabKey(snappAddress: PublicKey, key: string) {
+  const snapp = new EscapeGameSnapp(snappAddress);
+  const guess = new StringCircuitValue(key);
+  const tx = Mina.transaction(USER_ACCOUNT, async () => {
+    console.log(`Guessing Key ${key}...`);
+    await snapp.guessLabKey(guess);
+  });
+  try {
+    await tx.send().wait();
+  } catch (err) {
+    console.log(`Transaction Failed! Error: ${err}`);
+  }
+
+  // TODO: need a better way to store winners, ideally leverage off-chain storage from another team
+  const trueKey = (await getSnappState(snappAddress)).labKey;
   console.log(`True Key: ${trueKey}`)
   if (key == trueKey.replace(/\0/g, '')) {
     return 'winner'
