@@ -264,6 +264,108 @@ const locations: Record<string, Tile> = {
       }
     ]
   },
+  lab_hall: {
+    id: 'lab_hall',
+    title: "Lab Hall",
+    prompt: [
+      "You are in a harshly lit hallway with white linoleum floors",
+      "There are some doors off the hallway into lab rooms",
+      "At the end of the hallway, there is a keypad"
+    ],
+    movements: [
+      {
+        prompt: "Enter the door marked: 'Laboratory 3'",
+        to: "lab_3"
+      },
+      {
+        prompt: "Enter the door marked: 'Laboratory 2'",
+        to: "lab_2"
+      },
+      {
+        prompt: "Enter an unlabeled room near the exit",
+        to: "unlabeled_room"
+      }
+    ]
+  },
+  lab_1: {
+    id: 'lab_1',
+    title: "Lab 1",
+    prompt: [
+      "We numbers three, produce twelve thrice",
+      "Our sum, you'll find, is not as nice",
+      "If you knew our sum in advance",
+      "You would still need a second chance",
+      "To guess for sure our elements",
+      "The last two lines were just the hint",
+      "So you should know, by now, my largest member"
+    ],
+    movements: [
+      {
+        prompt: "Go back to lab 3",
+        to: "lab_3"
+      }
+    ]
+  },
+  lab_2: {
+    id: 'lab_2',
+    title: "Lab 2",
+    prompt: [
+      "You walk up a circular ramp",
+      "The radius of the circle is 20/pi meters and you walk 50 meters to end up directly above where you began",
+      "How high are you?"
+    ],
+    movements: [
+      {
+        prompt: "Go into the hall",
+        to: "lab_hall"
+      }
+    ]
+  },
+  lab_3: {
+    id: 'lab_3',
+    title: "Lab 3",
+    prompt: [
+      "Giovani's Room",
+      "Player Pano",
+      "Canery Row",
+      "The Blust Eye",
+      "Ulyses",
+      "184",
+      "Wrinkle in Time",
+      "King Lea",
+      "Suttre"
+    ],
+    movements: [
+      {
+        prompt: "Go into the hall",
+        to: "lab_hall"
+      },
+      {
+        prompt: "Enter the next lab",
+        to: "lab_1"
+      }
+    ]
+  },
+  unlabeled_room: {
+    id: 'unlabeled_room',
+    title: '???',
+    prompt: [
+      "FER_XIWPCOBOLQ",
+      "FER_EDNLDKBSAS",
+      "FER_FVKBRTQGEF",
+      "FER_MBKHHRVEIQ",
+      "FER_ULPDJNBRNY",
+      "FER_FHLPCNDNGT",
+      "FER_JWKSQDQNNL",
+      "IIO_TEIDSKVOFQ"
+    ],
+    movements: [
+      {
+        prompt: "Go into the hall",
+        to: "lab_hall"
+      }
+    ]
+  },
   winner: {
     id: "winner",
     title: "Winner",
