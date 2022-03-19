@@ -14,20 +14,10 @@
 
 		img.onload = function () {
 			ctx.drawImage(img, 0, 0);
-			addText();
 		};
 
 		img.src = '/static/beach.png';
 	});
-
-	const addText = function () {
-		ctx.fillStyle = 'white';
-		ctx.fillRect(175, 400, 450, 80);
-
-		ctx.fillStyle = 'black';
-		ctx.font = '20px sans-serif';
-		ctx.fillText(tileConfig.prompt[0], 180, 420);
-	};
 </script>
 
-<canvas id="canvas" width="800" height="500" />
+<canvas id="canvas" width="1000" height="500" />

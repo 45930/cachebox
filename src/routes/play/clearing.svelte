@@ -43,7 +43,9 @@
 </script>
 
 <div class="container flex justify-center flex-wrap">
-	<TilePrompt prompt={tileConfig.prompt} />
+	<div id="tile-prompt" class="mb-4 p-2 rounded border-neutral-200 border-solid border-2">
+		<TilePrompt prompt={tileConfig.prompt} />
+	</div>
 	<LineBreak />
 	{#if isSnarkyLoaded}
 		<button on:click={() => openClearingModal()}>Inspect Keypad</button>
