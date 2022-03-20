@@ -3,117 +3,126 @@
 	import LineBreak from '$lib/lineBreak.svelte';
 	import TileMovements from './[tile_id]/_tileMovements.svelte';
 	import { InteractionType } from '$lib/enums';
+	import Canvas from './canvas/index.svelte';
+	import { afterUpdate } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
+	import { session } from '$app/stores';
+	import type { Interaction } from 'src/global';
 
 	export let name;
 	const config = $locationStore[name];
 
-	const dialogueOptions = config.interactions.filter((x) => x.type == InteractionType.Dialogue);
+	const dialogueOptions: Record<string, Interaction> = {};
+	config.interactions
+		.filter((x) => x.type == InteractionType.Dialogue)
+		.forEach((diag) => {
+			dialogueOptions[diag.short || diag.prompt] = diag;
+		});
+
 	$: dialogueHistory = config.prompt.map((x) => {
 		return { from: 'them', text: x };
 	});
 
-	const addDialogue = function (dialogue: [string, string]) {
-		const us = dialogue[0];
-		const them = dialogue[1];
+	afterNavigate(async () => {
+		await getSession();
+	});
 
-		dialogueHistory = [
-			...dialogueHistory,
-			{
-				from: 'us',
-				text: us
-			}
-		];
+	afterUpdate(() => {
+		scrollToBottom();
+	});
 
-		dialogueHistory = [
-			...dialogueHistory,
-			{
-				from: 'them',
-				text: them
-			}
-		];
+	let nextDialogue: string = 'Ask a Question';
+
+	const selectDialogue = function () {
+		console.log(dialogueOptions);
+		console.log(nextDialogue);
+		const dialoguge = dialogueOptions[nextDialogue];
+		if (dialoguge) {
+			const us = dialoguge.prompt;
+			const them = dialoguge.response;
+
+			dialogueHistory = [
+				...dialogueHistory,
+				{
+					from: 'us',
+					text: us
+				}
+			];
+
+			dialogueHistory = [
+				...dialogueHistory,
+				{
+					from: 'them',
+					text: them
+				}
+			];
+		}
+		nextDialogue = 'Ask a Question';
+	};
+
+	const getSession = async function () {
+		const sessionResp = await fetch('/gameState', {
+			headers: { 'content-type': 'application/json' },
+			method: 'GET'
+		});
+
+		const data = await sessionResp.json();
+
+		$session = data;
+	};
+
+	$: tileConfig = $locationStore[name];
+
+	const scrollToBottom = function () {
+		const element = document.getElementById('dialogue');
+		console.log(element.scrollHeight);
+		element.scrollTop = element.scrollHeight;
 	};
 </script>
 
 <div class="container flex justify-center flex-wrap">
-	{#if name == 'marcus'}
-		<svg
-			viewBox="0 0 90 90"
-			fill="none"
-			role="img"
-			xmlns="http://www.w3.org/2000/svg"
-			width="128"
-			height="128"
-			><mask id="mask__ring" maskUnits="userSpaceOnUse" x="0" y="0" width="90" height="90"
-				><rect width="90" height="90" fill="#FFFFFF" /></mask
-			><g mask="url(#mask__ring)"
-				><path d="M0 0h90v45H0z" fill="#680148" /><path d="M0 45h90v45H0z" fill="#000000" /><path
-					d="M83 45a38 38 0 00-76 0h76z"
-					fill="#000000"
-				/><path d="M83 45a38 38 0 01-76 0h76z" fill="#e0eff1" /><path
-					d="M77 45a32 32 0 10-64 0h64z"
-					fill="#e0eff1"
-				/><path d="M77 45a32 32 0 11-64 0h64z" fill="#7db4b5" /><path
-					d="M71 45a26 26 0 00-52 0h52z"
-					fill="#7db4b5"
-				/><path d="M71 45a26 26 0 01-52 0h52z" fill="#680148" /><circle
-					cx="45"
-					cy="45"
-					r="23"
-					fill="#ffffff"
-				/></g
-			></svg
-		>
-	{:else}
-		<svg
-			viewBox="0 0 90 90"
-			fill="none"
-			role="img"
-			xmlns="http://www.w3.org/2000/svg"
-			width="128"
-			height="128"
-			><mask id="mask__ring" maskUnits="userSpaceOnUse" x="0" y="0" width="90" height="90"
-				><rect width="90" height="90" fill="#FFFFFF" /></mask
-			><g mask="url(#mask__ring)"
-				><path d="M0 0h90v45H0z" fill="#000000" /><path d="M0 45h90v45H0z" fill="#e0eff1" /><path
-					d="M83 45a38 38 0 00-76 0h76z"
-					fill="#e0eff1"
-				/><path d="M83 45a38 38 0 01-76 0h76z" fill="#7db4b5" /><path
-					d="M77 45a32 32 0 10-64 0h64z"
-					fill="#7db4b5"
-				/><path d="M77 45a32 32 0 11-64 0h64z" fill="#ffffff" /><path
-					d="M71 45a26 26 0 00-52 0h52z"
-					fill="#ffffff"
-				/><path d="M71 45a26 26 0 01-52 0h52z" fill="#000000" /><circle
-					cx="45"
-					cy="45"
-					r="23"
-					fill="#680148"
-				/></g
-			></svg
-		>
-	{/if}
-	<LineBreak />
-	<div id="dialogue" class="w-lg">
-		{#each dialogueHistory as message}
-			{#if message.from == 'them'}
-				<div class="float-left w-80 rounded bg-slate-100 p-1 my-1">{message.text}</div>
-			{:else}
-				<div class="float-right w-80 bg-slate-100 p-1 my-1">{message.text}</div>
-			{/if}
-			<LineBreak />
-		{/each}
-	</div>
-	<div id="questions">
-		{#each dialogueOptions as diag}
-			<div
-				class="cursor-pointer my-2 p-1"
-				on:click={() => {
-					addDialogue([diag.prompt, diag.response]);
-				}}
-			>
-				{diag.prompt}
+	<Canvas {tileConfig} />
+	<div class="relative -top-96 mx-auto">
+		<div id="questions" class="flex justify-end mb-3">
+			<!-- <div class="bg-white opacity-80">Ask:</div> -->
+			<div class=" bg-slate-500 opacity-80">
+				<select
+					name="select"
+					id="select"
+					class="px-4 outline-none text-gray-800 w-full"
+					bind:value={nextDialogue}
+					on:change={() => selectDialogue()}
+				>
+					<option value="Ask a Question" selected disabled hidden>Ask a Question</option>
+					{#each Object.values(dialogueOptions) as diag}
+						{#if diag.blockedOn}
+							{#if $session[diag.blockedOn]}
+								<option class="bg-orange-300 opacity-80" value={diag.short || diag.prompt}
+									>{diag.short || diag.prompt}</option
+								>
+							{/if}
+						{:else}
+							<option value={diag.short || diag.prompt}>{diag.short || diag.prompt}</option>
+						{/if}
+					{/each}
+				</select>
 			</div>
-		{/each}
+		</div>
+		<div id="dialogue" class="w-lg h-80 mx-auto overflow-y-auto bg-white opacity-80 mb-12">
+			{#each dialogueHistory as message}
+				{#if message.from == 'them'}
+					<div class="float-left w-80 rounded bg-slate-400 p-1 my-1 ml-1">{message.text}</div>
+				{:else}
+					<div class="float-right w-80 rounded bg-blue-400 p-1 my-1 mr-1">{message.text}</div>
+				{/if}
+				<LineBreak />
+			{/each}
+		</div>
+		<div
+			id="tile-movements"
+			class="w-2xl mb-4 p-2 rounded border-neutral-200 border-solid border-2"
+		>
+			<TileMovements movements={config.movements} />
+		</div>
 	</div>
-	<TileMovements movements={config.movements} />
 </div>

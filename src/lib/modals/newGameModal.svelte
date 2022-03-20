@@ -29,57 +29,49 @@
 </script>
 
 {#if isOpen}
-	<div class="modal">
-		<div class="contents">
-			<h2>New Game</h2>
-			<p>Fill out form to start new game</p>
-			<label>Username: <input bind:value={username} /></label>
-			<div class="actions">
-				<button on:click={onSubmit}>OK</button>
+	<div class="fixed top-0 bottom-0 right-0 left-0 flex justify-center pointer-events-none">
+		<div class="w-lg h-80 rounded-md p-4 bg-white flex flex-col justify-center pointer-events-auto">
+			<h2 class="text-center text-xl font-bold">Welcome to Cahchebox</h2>
+			<div class="flex flex-col mx-8">
+				<p class="text-left mt-2">
+					This is an escape game based on the <a class="underline" href="https://minaprotocol.com/"
+						>Mina</a
+					>
+					blockchain. Read more about the project on our
+					<a class="underline" href="/about">about page</a>.
+				</p>
+				<p class="text-left mt-2">
+					To test your logic and puzzle-solving skills, enter the game below!
+				</p>
+				<label class="mt-2"
+					>What can we call you?: <input
+						bind:value={username}
+						class="
+							form-control
+							block
+							w-sm
+							px-3
+							py-1.5
+							text-base
+							font-normal
+							text-gray-700
+							bg-white bg-clip-padding
+							border border-solid border-gray-300
+							rounded
+							transition
+							ease-in-out
+							m-0
+							focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
+						"
+					/></label
+				>
+				<div class="mt-6">
+					<button
+						class="inline-block px-6 py-2.5 bg-neutral-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+						on:click={onSubmit}>ENTER</button
+					>
+				</div>
 			</div>
 		</div>
 	</div>
 {/if}
-
-<style>
-	.modal {
-		position: fixed;
-		top: 0;
-		bottom: 0;
-		right: 0;
-		left: 0;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-
-		/* allow click-through to backdrop */
-		pointer-events: none;
-	}
-
-	.contents {
-		min-width: 240px;
-		border-radius: 6px;
-		padding: 16px;
-		background: white;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		pointer-events: auto;
-	}
-
-	h2 {
-		text-align: center;
-		font-size: 24px;
-	}
-
-	p {
-		text-align: center;
-		margin-top: 16px;
-	}
-
-	.actions {
-		margin-top: 32px;
-		display: flex;
-		justify-content: flex-end;
-	}
-</style>
