@@ -1,12 +1,12 @@
 {
   ".svelte-kit/runtime/client/start.js": {
-    "file": "start-1499b0fa.js",
+    "file": "start-af5b96b2.js",
     "src": ".svelte-kit/runtime/client/start.js",
     "isEntry": true,
     "imports": [
-      "_vendor-77d161ad.js",
+      "_vendor-fc529e69.js",
       "_preload-helper-e4860ae8.js",
-      "_singletons-a6a7384f.js"
+      "_singletons-d1fb5791.js"
     ],
     "dynamicImports": [
       "src/routes/__layout.svelte",
@@ -15,170 +15,212 @@
       "src/routes/about/index.svelte",
       "src/routes/play/index.svelte",
       "src/routes/play/clearing.svelte",
+      "src/routes/play/lab_hall.svelte",
+      "src/routes/play/canvas/index.svelte",
       "src/routes/play/marcus.svelte",
       "src/routes/play/merlin.svelte",
       "src/routes/play/[tile_id]/index.svelte"
     ]
   },
   "src/routes/__layout.svelte": {
-    "file": "pages/__layout.svelte-897da0e4.js",
+    "file": "pages/__layout.svelte-1da5dcbf.js",
     "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-77d161ad.js"
+      "_vendor-fc529e69.js"
     ],
     "css": [
-      "assets/pages/__layout.svelte-26fbb49f.css"
+      "assets/pages/__layout.svelte-4ca1eaad.css"
     ]
   },
   ".svelte-kit/runtime/components/error.svelte": {
-    "file": "error.svelte-9ddb35cb.js",
+    "file": "error.svelte-335f448b.js",
     "src": ".svelte-kit/runtime/components/error.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-77d161ad.js"
+      "_vendor-fc529e69.js"
     ]
   },
   "src/routes/index.svelte": {
-    "file": "pages/index.svelte-b0fdbfb9.js",
+    "file": "pages/index.svelte-5ab308e1.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-77d161ad.js",
-      "_stores-529f546e.js",
-      "_navigation-c0b2019f.js",
-      "_singletons-a6a7384f.js"
-    ],
-    "css": [
-      "assets/pages/index.svelte-1856c6ef.css"
+      "_vendor-fc529e69.js",
+      "_stores-0e9b45d8.js",
+      "_navigation-13fd7038.js",
+      "_singletons-d1fb5791.js"
     ]
   },
   "src/routes/about/index.svelte": {
-    "file": "pages/about/index.svelte-88e63336.js",
+    "file": "pages/about/index.svelte-142b96b7.js",
     "src": "src/routes/about/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-77d161ad.js"
+      "_vendor-fc529e69.js"
     ]
   },
   "src/routes/play/index.svelte": {
-    "file": "pages/play/index.svelte-0b3ed047.js",
+    "file": "pages/play/index.svelte-33b4c6b1.js",
     "src": "src/routes/play/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-77d161ad.js",
-      "_stores-529f546e.js"
+      "_vendor-fc529e69.js",
+      "_stores-0e9b45d8.js",
+      "_navigation-13fd7038.js",
+      "_singletons-d1fb5791.js"
     ]
   },
   "src/routes/play/clearing.svelte": {
-    "file": "pages/play/clearing.svelte-b3a14244.js",
+    "file": "pages/play/clearing.svelte-9d76f39a.js",
     "src": "src/routes/play/clearing.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-77d161ad.js",
-      "__tileMovements-f91a8224.js",
-      "__tileInteractions-9c3c4194.js",
-      "_navigation-c0b2019f.js",
-      "_preload-helper-e4860ae8.js",
-      "_singletons-a6a7384f.js"
-    ],
-    "dynamicImports": [
-      "src/lib/snapps/escapeGameSnapp.ts"
-    ],
-    "css": [
-      "assets/pages/play/clearing.svelte-77edf091.css"
+      "_vendor-fc529e69.js",
+      "__tileMovements-bf43bc63.js",
+      "__tilePrompt-6c4fd578.js",
+      "_navigation-13fd7038.js",
+      "_minaStore-7b64d412.js",
+      "src/routes/play/canvas/index.svelte",
+      "_stores-0e9b45d8.js",
+      "_singletons-d1fb5791.js",
+      "_preload-helper-e4860ae8.js"
+    ]
+  },
+  "src/routes/play/canvas/index.svelte": {
+    "file": "pages/play/canvas/index.svelte-26e5fc10.js",
+    "src": "src/routes/play/canvas/index.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_vendor-fc529e69.js"
+    ]
+  },
+  "src/routes/play/lab_hall.svelte": {
+    "file": "pages/play/lab_hall.svelte-cd5f3d3b.js",
+    "src": "src/routes/play/lab_hall.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_vendor-fc529e69.js",
+      "__tileMovements-bf43bc63.js",
+      "__tilePrompt-6c4fd578.js",
+      "_navigation-13fd7038.js",
+      "_minaStore-7b64d412.js",
+      "src/routes/play/canvas/index.svelte",
+      "_singletons-d1fb5791.js",
+      "_preload-helper-e4860ae8.js"
     ]
   },
   "src/routes/play/marcus.svelte": {
-    "file": "pages/play/marcus.svelte-f793762b.js",
+    "file": "pages/play/marcus.svelte-c459e09c.js",
     "src": "src/routes/play/marcus.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-77d161ad.js",
-      "__mBrother-68454496.js",
-      "__tileMovements-f91a8224.js",
-      "_navigation-c0b2019f.js",
-      "_singletons-a6a7384f.js"
+      "_vendor-fc529e69.js",
+      "__mBrother-0f0c2340.js",
+      "__tileMovements-bf43bc63.js",
+      "_navigation-13fd7038.js",
+      "_singletons-d1fb5791.js",
+      "src/routes/play/canvas/index.svelte",
+      "_stores-0e9b45d8.js"
     ]
   },
   "src/routes/play/merlin.svelte": {
-    "file": "pages/play/merlin.svelte-09f3ea5b.js",
+    "file": "pages/play/merlin.svelte-92ac8b14.js",
     "src": "src/routes/play/merlin.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-77d161ad.js",
-      "__mBrother-68454496.js",
-      "__tileMovements-f91a8224.js",
-      "_navigation-c0b2019f.js",
-      "_singletons-a6a7384f.js"
+      "_vendor-fc529e69.js",
+      "__mBrother-0f0c2340.js",
+      "__tileMovements-bf43bc63.js",
+      "_navigation-13fd7038.js",
+      "_singletons-d1fb5791.js",
+      "src/routes/play/canvas/index.svelte",
+      "_stores-0e9b45d8.js"
     ]
   },
   "src/routes/play/[tile_id]/index.svelte": {
-    "file": "pages/play/_tile_id_/index.svelte-3d8889b4.js",
+    "file": "pages/play/_tile_id_/index.svelte-09be5969.js",
     "src": "src/routes/play/[tile_id]/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-77d161ad.js",
-      "__tileMovements-f91a8224.js",
-      "__tileInteractions-9c3c4194.js",
-      "_navigation-c0b2019f.js",
-      "_singletons-a6a7384f.js"
+      "_vendor-fc529e69.js",
+      "__tileMovements-bf43bc63.js",
+      "__tilePrompt-6c4fd578.js",
+      "_navigation-13fd7038.js",
+      "src/routes/play/canvas/index.svelte",
+      "_singletons-d1fb5791.js"
     ]
   },
-  "_vendor-77d161ad.js": {
-    "file": "chunks/vendor-77d161ad.js"
+  "_vendor-fc529e69.js": {
+    "file": "chunks/vendor-fc529e69.js"
   },
-  "_singletons-a6a7384f.js": {
-    "file": "chunks/singletons-a6a7384f.js"
+  "_singletons-d1fb5791.js": {
+    "file": "chunks/singletons-d1fb5791.js"
   },
   "_preload-helper-e4860ae8.js": {
     "file": "chunks/preload-helper-e4860ae8.js"
   },
-  "_stores-529f546e.js": {
-    "file": "chunks/stores-529f546e.js",
+  "_stores-0e9b45d8.js": {
+    "file": "chunks/stores-0e9b45d8.js",
     "imports": [
-      "_vendor-77d161ad.js"
+      "_vendor-fc529e69.js"
     ]
   },
-  "_navigation-c0b2019f.js": {
-    "file": "chunks/navigation-c0b2019f.js",
+  "_navigation-13fd7038.js": {
+    "file": "chunks/navigation-13fd7038.js",
     "imports": [
-      "_singletons-a6a7384f.js"
+      "_singletons-d1fb5791.js"
     ]
   },
-  "__tileMovements-f91a8224.js": {
-    "file": "chunks/_tileMovements-f91a8224.js",
+  "__tileMovements-bf43bc63.js": {
+    "file": "chunks/_tileMovements-bf43bc63.js",
     "imports": [
-      "_vendor-77d161ad.js",
-      "_navigation-c0b2019f.js"
+      "_vendor-fc529e69.js",
+      "_navigation-13fd7038.js"
     ]
   },
-  "__tileInteractions-9c3c4194.js": {
-    "file": "chunks/_tileInteractions-9c3c4194.js",
+  "__tilePrompt-6c4fd578.js": {
+    "file": "chunks/_tilePrompt-6c4fd578.js",
     "imports": [
-      "_vendor-77d161ad.js",
-      "_navigation-c0b2019f.js",
-      "__tileMovements-f91a8224.js"
+      "_vendor-fc529e69.js",
+      "_navigation-13fd7038.js",
+      "__tileMovements-bf43bc63.js"
     ]
   },
-  "__mBrother-68454496.js": {
-    "file": "chunks/_mBrother-68454496.js",
+  "_minaStore-7b64d412.js": {
+    "file": "chunks/minaStore-7b64d412.js",
     "imports": [
-      "_vendor-77d161ad.js",
-      "__tileMovements-f91a8224.js"
+      "_vendor-fc529e69.js",
+      "_navigation-13fd7038.js",
+      "_preload-helper-e4860ae8.js"
+    ],
+    "dynamicImports": [
+      "src/lib/snapps/escapeGameSnapp.ts"
+    ]
+  },
+  "__mBrother-0f0c2340.js": {
+    "file": "chunks/_mBrother-0f0c2340.js",
+    "imports": [
+      "_vendor-fc529e69.js",
+      "__tileMovements-bf43bc63.js",
+      "src/routes/play/canvas/index.svelte",
+      "_navigation-13fd7038.js",
+      "_stores-0e9b45d8.js"
     ]
   },
   "src/lib/snapps/escapeGameSnapp.ts": {
-    "file": "chunks/escapeGameSnapp-b74d24d2.js",
+    "file": "chunks/escapeGameSnapp-8a9b0972.js",
     "src": "src/lib/snapps/escapeGameSnapp.ts",
     "isDynamicEntry": true
   }

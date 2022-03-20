@@ -1,9 +1,9 @@
 export const manifest = {
 	appDir: "_app",
-	assets: new Set(["favicon.png"]),
+	assets: new Set(["beach.png","favicon.png"]),
+	mimeTypes: {".png":"image/png"},
 	_: {
-		mime: {".png":"image/png"},
-		entry: {"file":"start-1499b0fa.js","js":["start-1499b0fa.js","chunks/vendor-77d161ad.js","chunks/preload-helper-e4860ae8.js","chunks/singletons-a6a7384f.js"],"css":[]},
+		entry: {"file":"start-af5b96b2.js","js":["start-af5b96b2.js","chunks/vendor-fc529e69.js","chunks/preload-helper-e4860ae8.js","chunks/singletons-d1fb5791.js"],"css":[]},
 		nodes: [
 			() => import('./nodes/0.js'),
 			() => import('./nodes/1.js'),
@@ -13,13 +13,17 @@ export const manifest = {
 			() => import('./nodes/5.js'),
 			() => import('./nodes/6.js'),
 			() => import('./nodes/7.js'),
-			() => import('./nodes/8.js')
+			() => import('./nodes/8.js'),
+			() => import('./nodes/9.js'),
+			() => import('./nodes/10.js')
 		],
 		routes: [
 			{
 				type: 'page',
+				id: "",
 				pattern: /^\/$/,
-				params: null,
+				names: [],
+				types: [],
 				path: "/",
 				shadow: null,
 				a: [0,2],
@@ -27,14 +31,18 @@ export const manifest = {
 			},
 			{
 				type: 'endpoint',
+				id: "gameState",
 				pattern: /^\/gameState\/?$/,
-				params: null,
+				names: [],
+				types: [],
 				load: () => import('./entries/endpoints/gameState.ts.js')
 			},
 			{
 				type: 'page',
+				id: "about",
 				pattern: /^\/about\/?$/,
-				params: null,
+				names: [],
+				types: [],
 				path: "/about",
 				shadow: null,
 				a: [0,3],
@@ -42,8 +50,10 @@ export const manifest = {
 			},
 			{
 				type: 'page',
+				id: "play",
 				pattern: /^\/play\/?$/,
-				params: null,
+				names: [],
+				types: [],
 				path: "/play",
 				shadow: null,
 				a: [0,4],
@@ -51,8 +61,10 @@ export const manifest = {
 			},
 			{
 				type: 'page',
+				id: "play/clearing",
 				pattern: /^\/play\/clearing\/?$/,
-				params: null,
+				names: [],
+				types: [],
 				path: "/play/clearing",
 				shadow: null,
 				a: [0,5],
@@ -60,31 +72,63 @@ export const manifest = {
 			},
 			{
 				type: 'page',
-				pattern: /^\/play\/marcus\/?$/,
-				params: null,
-				path: "/play/marcus",
+				id: "play/lab_hall",
+				pattern: /^\/play\/lab_hall\/?$/,
+				names: [],
+				types: [],
+				path: "/play/lab_hall",
 				shadow: null,
 				a: [0,6],
 				b: [1]
 			},
 			{
 				type: 'page',
-				pattern: /^\/play\/merlin\/?$/,
-				params: null,
-				path: "/play/merlin",
+				id: "play/canvas",
+				pattern: /^\/play\/canvas\/?$/,
+				names: [],
+				types: [],
+				path: "/play/canvas",
 				shadow: null,
 				a: [0,7],
 				b: [1]
 			},
 			{
 				type: 'page',
-				pattern: /^\/play\/([^/]+?)\/?$/,
-				params: (m) => ({ tile_id: m[1]}),
-				path: null,
+				id: "play/marcus",
+				pattern: /^\/play\/marcus\/?$/,
+				names: [],
+				types: [],
+				path: "/play/marcus",
 				shadow: null,
 				a: [0,8],
 				b: [1]
+			},
+			{
+				type: 'page',
+				id: "play/merlin",
+				pattern: /^\/play\/merlin\/?$/,
+				names: [],
+				types: [],
+				path: "/play/merlin",
+				shadow: null,
+				a: [0,9],
+				b: [1]
+			},
+			{
+				type: 'page',
+				id: "play/[tile_id]",
+				pattern: /^\/play\/([^/]+?)\/?$/,
+				names: ["tile_id"],
+				types: [null],
+				path: null,
+				shadow: null,
+				a: [0,10],
+				b: [1]
 			}
-		]
+		],
+		matchers: async () => {
+			
+			return {  };
+		}
 	}
 };
