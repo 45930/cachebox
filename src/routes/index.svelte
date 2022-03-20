@@ -9,6 +9,12 @@
 
 	onMount(async () => {
 		await getSession();
+
+		if ($session.user) {
+			goto(`/play`);
+		} else {
+			openNewGameModal();
+		}
 	});
 
 	const getSession = async function () {
@@ -28,21 +34,4 @@
 	};
 </script>
 
-<div class="justify-center flex flex-wrap">
-	<div
-		on:click={() => openNewGameModal()}
-		class="justify-center mx-auto mb-16 border-2 border-solid border-sky-800 rounded px-2 py-2"
-	>
-		<p class="text-xl font-bold">NEW GAME</p>
-	</div>
-	<div class="w-full" />
-	{#if $session && $session.user != 'null_user'}
-		<div
-			on:click={() => goto(`/play/${$session.tile}`)}
-			class="justify-center mx-auto mb-16 border-2 border-solid border-sky-800 rounded px-2 py-2"
-		>
-			<p class="text-xl font-bold">CONTINUE GAME</p>
-			<p>Current Game State: {JSON.stringify($session)}</p>
-		</div>
-	{/if}
-</div>
+<div class="contianer" />

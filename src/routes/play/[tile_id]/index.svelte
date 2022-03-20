@@ -35,13 +35,19 @@
 
 <div class="container flex justify-center flex-wrap">
 	<Canvas {tileConfig} />
-	<div
-		id="tile-prompt"
-		class="mb-4 p-2 rounded border-neutral-200 border-solid border-2 relative bottom-40 bg-white opacity-80"
-	>
-		<TilePrompt prompt={tileConfig.prompt} />
+	<div class="relative bottom-36">
+		<div
+			id="tile-prompt"
+			class="p-2 mb-12 rounded border-neutral-200 border-solid border-2 bg-white opacity-80"
+		>
+			<TilePrompt prompt={tileConfig.prompt} />
+		</div>
+		<LineBreak />
+		<div
+			id="tile-movements"
+			class="w-2xl mb-4 p-2 rounded border-neutral-200 border-solid border-2"
+		>
+			<TileMovements movements={tileConfig.movements} />
+		</div>
 	</div>
-	<LineBreak />
-	<TileInteractions interactions={tileConfig.interactions} />
-	<TileMovements movements={tileConfig.movements} />
 </div>

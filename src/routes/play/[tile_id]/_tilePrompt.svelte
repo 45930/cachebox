@@ -13,7 +13,7 @@
 	});
 </script>
 
-<div id="tile-prompt-content" class="mb-8 w-xl h-16">
+<div id="tile-prompt-content" class="w-xl h-16">
 	{currentPromptSegment}
 </div>
 <LineBreak />
