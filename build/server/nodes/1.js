@@ -1,4 +1,4 @@
-import * as module from '../entries/fallbacks/error.svelte.js';
+import * as module from '../entries/pages/error.svelte.js';
 
 export { module };
 export const entry = 'error.svelte-335f448b.js';
