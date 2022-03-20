@@ -22,7 +22,7 @@ const config = {
 	kit: {
 		adapter: adapter({
 			out: 'build',
-			env: {
+			envPrefix: {
 				headers: {
 					'Cross-Origin-Embedder-Policy': 'CO_EMBEDDER_POLICY',
 					'Cross-Origin-Opener-Policy': 'CO_OPENER_POLICY',

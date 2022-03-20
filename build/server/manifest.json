@@ -4,7 +4,7 @@
     "src": ".svelte-kit/build/index.js",
     "isEntry": true,
     "imports": [
-      "_index-f3d7dd3c.js"
+      "_index-7c21a753.js"
     ]
   },
   "src/routes/gameState.ts": {
@@ -17,19 +17,19 @@
     "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "imports": [
-      "_index-f3d7dd3c.js",
-      "_index-c1d7cf4d.js"
+      "_index-7c21a753.js",
+      "_index-6b8fbbc5.js"
     ],
     "css": [
-      "assets/entries/pages/__layout.svelte-39d0cec3.css"
+      "assets/entries/pages/__layout.svelte-f1242c6a.css"
     ]
   },
   ".svelte-kit/runtime/components/error.svelte": {
-    "file": "entries/pages/error.svelte.js",
+    "file": "entries/fallbacks/error.svelte.js",
     "src": ".svelte-kit/runtime/components/error.svelte",
     "isEntry": true,
     "imports": [
-      "_index-f3d7dd3c.js"
+      "_index-7c21a753.js"
     ]
   },
   "src/routes/index.svelte": {
@@ -37,11 +37,8 @@
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "imports": [
-      "_index-f3d7dd3c.js",
-      "_stores-d93249e7.js"
-    ],
-    "css": [
-      "assets/entries/pages/index.svelte-570aae23.css"
+      "_index-7c21a753.js",
+      "_stores-8bd02fcb.js"
     ]
   },
   "src/routes/about/index.svelte": {
@@ -49,7 +46,7 @@
     "src": "src/routes/about/index.svelte",
     "isEntry": true,
     "imports": [
-      "_index-f3d7dd3c.js"
+      "_index-7c21a753.js"
     ]
   },
   "src/routes/play/index.svelte": {
@@ -57,8 +54,8 @@
     "src": "src/routes/play/index.svelte",
     "isEntry": true,
     "imports": [
-      "_index-f3d7dd3c.js",
-      "_stores-d93249e7.js"
+      "_index-7c21a753.js",
+      "_stores-8bd02fcb.js"
     ]
   },
   "src/routes/play/clearing.svelte": {
@@ -66,13 +63,34 @@
     "src": "src/routes/play/clearing.svelte",
     "isEntry": true,
     "imports": [
-      "_index-f3d7dd3c.js",
-      "__tileMovements-f9f0e983.js",
-      "__tileInteractions-9cea8494.js",
-      "_index-c1d7cf4d.js"
-    ],
-    "css": [
-      "assets/entries/pages/play/clearing.svelte-f8d5fbb0.css"
+      "_index-7c21a753.js",
+      "__tileMovements-e0c5c3fa.js",
+      "__tilePrompt-47eff397.js",
+      "_minaStore-fbb2f892.js",
+      "src/routes/play/canvas/index.svelte",
+      "_stores-8bd02fcb.js",
+      "_index-6b8fbbc5.js"
+    ]
+  },
+  "src/routes/play/canvas/index.svelte": {
+    "file": "entries/pages/play/canvas/index.svelte.js",
+    "src": "src/routes/play/canvas/index.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-7c21a753.js"
+    ]
+  },
+  "src/routes/play/lab_hall.svelte": {
+    "file": "entries/pages/play/lab_hall.svelte.js",
+    "src": "src/routes/play/lab_hall.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index-7c21a753.js",
+      "__tileMovements-e0c5c3fa.js",
+      "__tilePrompt-47eff397.js",
+      "_minaStore-fbb2f892.js",
+      "src/routes/play/canvas/index.svelte",
+      "_index-6b8fbbc5.js"
     ]
   },
   "src/routes/play/marcus.svelte": {
@@ -80,10 +98,12 @@
     "src": "src/routes/play/marcus.svelte",
     "isEntry": true,
     "imports": [
-      "_index-f3d7dd3c.js",
-      "__mBrother-1e1f2f35.js",
-      "__tileMovements-f9f0e983.js",
-      "_index-c1d7cf4d.js"
+      "_index-7c21a753.js",
+      "__mBrother-b344ddf2.js",
+      "__tileMovements-e0c5c3fa.js",
+      "_index-6b8fbbc5.js",
+      "src/routes/play/canvas/index.svelte",
+      "_stores-8bd02fcb.js"
     ]
   },
   "src/routes/play/merlin.svelte": {
@@ -91,10 +111,12 @@
     "src": "src/routes/play/merlin.svelte",
     "isEntry": true,
     "imports": [
-      "_index-f3d7dd3c.js",
-      "__mBrother-1e1f2f35.js",
-      "__tileMovements-f9f0e983.js",
-      "_index-c1d7cf4d.js"
+      "_index-7c21a753.js",
+      "__mBrother-b344ddf2.js",
+      "__tileMovements-e0c5c3fa.js",
+      "_index-6b8fbbc5.js",
+      "src/routes/play/canvas/index.svelte",
+      "_stores-8bd02fcb.js"
     ]
   },
   "src/routes/play/[tile_id]/index.svelte": {
@@ -102,46 +124,55 @@
     "src": "src/routes/play/[tile_id]/index.svelte",
     "isEntry": true,
     "imports": [
-      "_index-f3d7dd3c.js",
-      "__tileMovements-f9f0e983.js",
-      "__tileInteractions-9cea8494.js",
-      "_index-c1d7cf4d.js"
+      "_index-7c21a753.js",
+      "__tileMovements-e0c5c3fa.js",
+      "__tilePrompt-47eff397.js",
+      "src/routes/play/canvas/index.svelte",
+      "_index-6b8fbbc5.js"
     ]
   },
-  "_index-f3d7dd3c.js": {
-    "file": "chunks/index-f3d7dd3c.js"
+  "_index-7c21a753.js": {
+    "file": "chunks/index-7c21a753.js"
   },
-  "_index-c1d7cf4d.js": {
-    "file": "chunks/index-c1d7cf4d.js",
+  "_index-6b8fbbc5.js": {
+    "file": "chunks/index-6b8fbbc5.js",
     "imports": [
-      "_index-f3d7dd3c.js"
+      "_index-7c21a753.js"
     ]
   },
-  "_stores-d93249e7.js": {
-    "file": "chunks/stores-d93249e7.js",
+  "_stores-8bd02fcb.js": {
+    "file": "chunks/stores-8bd02fcb.js",
     "imports": [
-      "_index-f3d7dd3c.js"
+      "_index-7c21a753.js"
     ]
   },
-  "__tileMovements-f9f0e983.js": {
-    "file": "chunks/_tileMovements-f9f0e983.js",
+  "__tileMovements-e0c5c3fa.js": {
+    "file": "chunks/_tileMovements-e0c5c3fa.js",
     "imports": [
-      "_index-c1d7cf4d.js",
-      "_index-f3d7dd3c.js"
+      "_index-6b8fbbc5.js",
+      "_index-7c21a753.js"
     ]
   },
-  "__tileInteractions-9cea8494.js": {
-    "file": "chunks/_tileInteractions-9cea8494.js",
+  "__tilePrompt-47eff397.js": {
+    "file": "chunks/_tilePrompt-47eff397.js",
     "imports": [
-      "_index-f3d7dd3c.js",
-      "__tileMovements-f9f0e983.js"
+      "_index-7c21a753.js",
+      "__tileMovements-e0c5c3fa.js"
     ]
   },
-  "__mBrother-1e1f2f35.js": {
-    "file": "chunks/_mBrother-1e1f2f35.js",
+  "_minaStore-fbb2f892.js": {
+    "file": "chunks/minaStore-fbb2f892.js",
     "imports": [
-      "_index-f3d7dd3c.js",
-      "__tileMovements-f9f0e983.js"
+      "_index-6b8fbbc5.js"
+    ]
+  },
+  "__mBrother-b344ddf2.js": {
+    "file": "chunks/_mBrother-b344ddf2.js",
+    "imports": [
+      "_index-7c21a753.js",
+      "__tileMovements-e0c5c3fa.js",
+      "src/routes/play/canvas/index.svelte",
+      "_stores-8bd02fcb.js"
     ]
   }
 }
