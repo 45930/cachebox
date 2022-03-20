@@ -9,6 +9,7 @@
 	import { openModal } from 'svelte-modals';
 	import ClearingKeypadModal from '$lib/modals/clearingKeypadModal.svelte';
 	import { loadSnarky, snarkyStore, deployedSnappsStore } from '$lib/stores/minaStore';
+	import Canvas from './canvas/index.svelte';
 
 	$: isSnarkyLoaded = false;
 
@@ -43,12 +44,26 @@
 </script>
 
 <div class="container flex justify-center flex-wrap">
-	<TilePrompt prompt={tileConfig.prompt} />
-	<LineBreak />
-	{#if isSnarkyLoaded}
-		<button on:click={() => openClearingModal()}>Inspect Keypad</button>
-	{/if}
-	<LineBreak />
-	<TileInteractions interactions={tileConfig.interactions} />
-	<TileMovements movements={tileConfig.movements} />
+	<Canvas {tileConfig} />
+	<div class="relative bottom-36">
+		<div
+			id="tile-prompt"
+			class="p-2 mb-12 rounded border-neutral-200 border-solid border-2 bg-white opacity-80"
+		>
+			<TilePrompt prompt={tileConfig.prompt} />
+		</div>
+		<LineBreak />
+		{#if isSnarkyLoaded}
+			<button on:click={() => openClearingModal()}>Inspect Keypad</button>
+		{:else}
+			<p>Waiting for snarky...</p>
+		{/if}
+		<LineBreak />
+		<div
+			id="tile-movements"
+			class="w-2xl mb-4 p-2 rounded border-neutral-200 border-solid border-2"
+		>
+			<TileMovements movements={tileConfig.movements} />
+		</div>
+	</div>
 </div>

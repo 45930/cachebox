@@ -16,6 +16,8 @@
 	import TileMovements from './_tileMovements.svelte';
 	import { afterNavigate } from '$app/navigation';
 
+	import Canvas from '../canvas/index.svelte';
+
 	export let tile;
 
 	afterNavigate(() => {
@@ -32,8 +34,20 @@
 </script>
 
 <div class="container flex justify-center flex-wrap">
-	<TilePrompt prompt={tileConfig.prompt} />
-	<LineBreak />
-	<TileInteractions interactions={tileConfig.interactions} />
-	<TileMovements movements={tileConfig.movements} />
+	<Canvas {tileConfig} />
+	<div class="relative bottom-36">
+		<div
+			id="tile-prompt"
+			class="p-2 mb-12 rounded border-neutral-200 border-solid border-2 bg-white opacity-80"
+		>
+			<TilePrompt prompt={tileConfig.prompt} />
+		</div>
+		<LineBreak />
+		<div
+			id="tile-movements"
+			class="w-2xl mb-4 p-2 rounded border-neutral-200 border-solid border-2"
+		>
+			<TileMovements movements={tileConfig.movements} />
+		</div>
+	</div>
 </div>
