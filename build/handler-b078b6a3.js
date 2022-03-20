@@ -751,50 +751,12 @@ async function setResponse(res, response) {
 	}
 }
 
-/* global {"headers":{"Cross-Origin-Embedder-Policy":"CO_EMBEDDER_POLICY","Cross-Origin-Opener-Policy":"CO_OPENER_POLICY","Cache-Control":"CACHE_CONTROL"}} */
-
-const expected = new Set([
-	'SOCKET_PATH',
-	'HOST',
-	'PORT',
-	'ORIGIN',
-	'XFF_DEPTH',
-	'ADDRESS_HEADER',
-	'PROTOCOL_HEADER',
-	'HOST_HEADER'
-]);
-
-if ({"headers":{"Cross-Origin-Embedder-Policy":"CO_EMBEDDER_POLICY","Cross-Origin-Opener-Policy":"CO_OPENER_POLICY","Cache-Control":"CACHE_CONTROL"}}) {
-	for (const name in process.env) {
-		if (name.startsWith({"headers":{"Cross-Origin-Embedder-Policy":"CO_EMBEDDER_POLICY","Cross-Origin-Opener-Policy":"CO_OPENER_POLICY","Cache-Control":"CACHE_CONTROL"}})) {
-			const unprefixed = name.slice({"headers":{"Cross-Origin-Embedder-Policy":"CO_EMBEDDER_POLICY","Cross-Origin-Opener-Policy":"CO_OPENER_POLICY","Cache-Control":"CACHE_CONTROL"}}.length);
-			if (!expected.has(unprefixed)) {
-				throw new Error(
-					`You should change envPrefix (${{"headers":{"Cross-Origin-Embedder-Policy":"CO_EMBEDDER_POLICY","Cross-Origin-Opener-Policy":"CO_OPENER_POLICY","Cache-Control":"CACHE_CONTROL"}}}) to avoid conflicts with existing environment variables — unexpectedly saw ${name}`
-				);
-			}
-		}
-	}
-}
-
-/**
- * @param {string} name
- * @param {any} fallback
- */
-function env(name, fallback) {
-	const prefixed = {"headers":{"Cross-Origin-Embedder-Policy":"CO_EMBEDDER_POLICY","Cross-Origin-Opener-Policy":"CO_OPENER_POLICY","Cache-Control":"CACHE_CONTROL"}} + name;
-	return prefixed in process.env ? process.env[prefixed] : fallback;
-}
-
-/* global {"headers":{"Cross-Origin-Embedder-Policy":"CO_EMBEDDER_POLICY","Cross-Origin-Opener-Policy":"CO_OPENER_POLICY","Cache-Control":"CACHE_CONTROL"}} */
+/* global process.env["ORIGIN"], "PROTOCOL_HEADER", "HOST_HEADER" */
 
 const server = new Server(manifest);
-const origin = env('ORIGIN', undefined);
-const xff_depth = parseInt(env('XFF_DEPTH', '1'));
-
-const address_header = env('ADDRESS_HEADER', '').toLowerCase();
-const protocol_header = env('PROTOCOL_HEADER', '').toLowerCase();
-const host_header = env('HOST_HEADER', 'host').toLowerCase();
+const origin = process.env["ORIGIN"];
+const protocol_header = "PROTOCOL_HEADER" && process.env["PROTOCOL_HEADER"];
+const host_header = ("HOST_HEADER" && process.env["HOST_HEADER"]) || 'host';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -824,56 +786,10 @@ const ssr = async (req, res) => {
 		request = await getRequest(origin || get_origin(req.headers), req);
 	} catch (err) {
 		res.statusCode = err.status || 400;
-		res.end(err.reason || 'Invalid request body');
-		return;
+		return res.end(err.reason || 'Invalid request body');
 	}
 
-	if (address_header && !(address_header in req.headers)) {
-		throw new Error(
-			`Address header was specified with ${
-				{"headers":{"Cross-Origin-Embedder-Policy":"CO_EMBEDDER_POLICY","Cross-Origin-Opener-Policy":"CO_OPENER_POLICY","Cache-Control":"CACHE_CONTROL"}} + 'ADDRESS_HEADER'
-			}=${address_header} but is absent from request`
-		);
-	}
-
-	setResponse(
-		res,
-		await server.respond(request, {
-			getClientAddress: () => {
-				if (address_header) {
-					const value = /** @type {string} */ (req.headers[address_header]) || '';
-
-					if (address_header === 'x-forwarded-for') {
-						const addresses = value.split(',');
-
-						if (xff_depth < 1) {
-							throw new Error(`${{"headers":{"Cross-Origin-Embedder-Policy":"CO_EMBEDDER_POLICY","Cross-Origin-Opener-Policy":"CO_OPENER_POLICY","Cache-Control":"CACHE_CONTROL"}} + 'XFF_DEPTH'} must be a positive integer`);
-						}
-
-						if (xff_depth > addresses.length) {
-							throw new Error(
-								`${{"headers":{"Cross-Origin-Embedder-Policy":"CO_EMBEDDER_POLICY","Cross-Origin-Opener-Policy":"CO_OPENER_POLICY","Cache-Control":"CACHE_CONTROL"}} + 'XFF_DEPTH'} is ${xff_depth}, but only found ${
-									addresses.length
-								} addresses`
-							);
-						}
-						return addresses[addresses.length - xff_depth].trim();
-					}
-
-					return value;
-				}
-
-				return (
-					req.connection?.remoteAddress ||
-					// @ts-expect-error
-					req.connection?.socket?.remoteAddress ||
-					req.socket?.remoteAddress ||
-					// @ts-expect-error
-					req.info?.remoteAddress
-				);
-			}
-		})
-	);
+	setResponse(res, await server.respond(request));
 };
 
 /** @param {import('polka').Middleware[]} handlers */
@@ -911,4 +827,4 @@ const handler = sequence(
 	].filter(Boolean)
 );
 
-export { env as e, handler as h, parse as p };
+export { handler as h, parse as p };
