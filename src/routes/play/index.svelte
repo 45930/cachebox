@@ -1,9 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { session } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	onMount(async () => {
 		await getSession();
+
+		if ($session.user) {
+			const tile = $session.tile || 'beach_landing';
+			goto(`/play/${tile}`);
+		} else {
+			goto('/');
+		}
 	});
 
 	const getSession = async function () {
@@ -18,4 +26,4 @@
 	};
 </script>
 
-<div>Playing</div>
+<div class="contianer" />

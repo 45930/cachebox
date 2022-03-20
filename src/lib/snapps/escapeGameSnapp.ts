@@ -16,12 +16,17 @@ import {
 
 import type { EscapeGameSnappInterface } from 'src/global';
 import { StringCircuitValue } from '../snarkyUtils/String';
+import { KeyedMerkleStore } from '../snarkyUtils/KeyedMerkleStore';
+
+
+let keyedMerkleStore = new KeyedMerkleStore();
 
 class EscapeGameSnapp extends SmartContract {
   constructor(address: PublicKey) {
     super(address);
     this.gateKey = State();
     this.labKey = State();
+    this.merkleRoot = State(); // merkle root of winning players tree
   }
 
   deploy(initialBalance: UInt64, gateKey: StringCircuitValue, labKey: StringCircuitValue) {
@@ -29,6 +34,7 @@ class EscapeGameSnapp extends SmartContract {
     this.balance.addInPlace(initialBalance);
     this.gateKey.set(gateKey.toField());
     this.labKey.set(labKey.toField());
+    this.merkleRoot.set(keyedMerkleStore.getMerkleRoot());
   }
 
   async guessGateKey(key: StringCircuitValue) {
@@ -39,6 +45,7 @@ class EscapeGameSnapp extends SmartContract {
       new Bool(false),
     )
 
+    // TODO: add to merkle proof
     return isCorrect;
   }
 
@@ -50,6 +57,7 @@ class EscapeGameSnapp extends SmartContract {
       new Bool(false),
     )
 
+    // TODO: add to merkle proof
     return isCorrect;
   }
 }
@@ -59,6 +67,7 @@ class EscapeGameSnapp extends SmartContract {
 // @state(Field) gateKey
 state(Field)(EscapeGameSnapp.prototype, 'gateKey');
 state(Field)(EscapeGameSnapp.prototype, 'labKey');
+state(Field)(EscapeGameSnapp.prototype, 'merkleRoot');
 
 // @method
 Reflect.metadata('design:paramtypes', [String])(EscapeGameSnapp.prototype, 'guessGateKey');

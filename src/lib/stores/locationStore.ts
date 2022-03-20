@@ -164,11 +164,13 @@ const locations: Record<string, Tile> = {
       {
         type: InteractionType.Dialogue,
         prompt: "If I ask your brother a question, will he tell me the truth?",
+        short: "Will your brother tell the truth?",
         response: "He will not."
       },
       {
         type: InteractionType.Dialogue,
         prompt: "If I ask your brother if you are a liar, will he tell me that you are?",
+        short: "Will your brother call you a liar?",
         response: "No, the sneaky devil!"
       },
       {
@@ -183,12 +185,9 @@ const locations: Record<string, Tile> = {
       },
       {
         type: InteractionType.Dialogue,
-        prompt: "What is the wall I saw on the beach? (Question should be gated based on context)",
-        response: "I do not know for I have never seen any wall"
-      },
-      {
-        type: InteractionType.Dialogue,
-        prompt: "Do you know what code I should enter to activate the keypad? (Question should be gated based on context)",
+        prompt: "Do you know what code I should enter to activate the keypad?",
+        short: "What is the code?",
+        blockedOn: "hasVisitedClearing",
         response: "94773 ought to get you in."
       },
     ]
@@ -216,31 +215,25 @@ const locations: Record<string, Tile> = {
       {
         type: InteractionType.Dialogue,
         prompt: "If I ask your brother a question, will he tell me the truth?",
+        short: "Will your brother tell the truth?",
         response: "No, he will lie to you."
       },
       {
         type: InteractionType.Dialogue,
         prompt: "If I ask your brother if you are a liar, will he tell me that you are?",
+        short: "Will your brother call you a liar?",
         response: "Yes!  It's not true!"
       },
       {
         type: InteractionType.Dialogue,
-        prompt: "What is this island?",
-        response: "This island is a construct meant to test you."
-      },
-      {
-        type: InteractionType.Dialogue,
         prompt: "Is it possible to leave the island?",
-        response: "Yes.  You will leave the island one way or another."
+        response: "Yes."
       },
       {
         type: InteractionType.Dialogue,
-        prompt: "What is the wall I saw on the beach? (Question should be gated based on context)",
-        response: "I rarely leave my cave.  I don't know the wall, perhaps it's new."
-      },
-      {
-        type: InteractionType.Dialogue,
-        prompt: "Do you know what code I should enter to activate the keypad? (Question should be gated based on context)",
+        prompt: "Do you know what code I should enter to activate the keypad?",
+        short: "What is the code?",
+        blockedOn: "hasVisitedClearing",
         response: "Last I heard, it was 16171."
       },
     ]

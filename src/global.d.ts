@@ -45,6 +45,8 @@ type LocationId = string;
 // Would be cool to explore other actions
 type Interaction = {
   prompt: string;
+  short?: string; // used as display option for long prompts
+  blockedOn?: string; // string reference to game state boolean
   type: InteractionType;
   response: string;
 }
