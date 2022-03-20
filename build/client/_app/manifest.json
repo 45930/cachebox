@@ -1,6 +1,6 @@
 {
   ".svelte-kit/runtime/client/start.js": {
-    "file": "start-af5b96b2.js",
+    "file": "start-dcb65f5f.js",
     "src": ".svelte-kit/runtime/client/start.js",
     "isEntry": true,
     "imports": [
@@ -77,7 +77,7 @@
     ]
   },
   "src/routes/play/clearing.svelte": {
-    "file": "pages/play/clearing.svelte-9d76f39a.js",
+    "file": "pages/play/clearing.svelte-6efc2f75.js",
     "src": "src/routes/play/clearing.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
@@ -94,16 +94,19 @@
     ]
   },
   "src/routes/play/canvas/index.svelte": {
-    "file": "pages/play/canvas/index.svelte-26e5fc10.js",
+    "file": "pages/play/canvas/index.svelte-e4f9510c.js",
     "src": "src/routes/play/canvas/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-fc529e69.js"
+    ],
+    "assets": [
+      "assets/beach-c7b7bdd7.png"
     ]
   },
   "src/routes/play/lab_hall.svelte": {
-    "file": "pages/play/lab_hall.svelte-cd5f3d3b.js",
+    "file": "pages/play/lab_hall.svelte-6b467aa9.js",
     "src": "src/routes/play/lab_hall.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
@@ -119,13 +122,13 @@
     ]
   },
   "src/routes/play/marcus.svelte": {
-    "file": "pages/play/marcus.svelte-c459e09c.js",
+    "file": "pages/play/marcus.svelte-6f9d2241.js",
     "src": "src/routes/play/marcus.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-fc529e69.js",
-      "__mBrother-0f0c2340.js",
+      "__mBrother-a74764b4.js",
       "__tileMovements-bf43bc63.js",
       "_navigation-13fd7038.js",
       "_singletons-d1fb5791.js",
@@ -134,13 +137,13 @@
     ]
   },
   "src/routes/play/merlin.svelte": {
-    "file": "pages/play/merlin.svelte-92ac8b14.js",
+    "file": "pages/play/merlin.svelte-ec66b692.js",
     "src": "src/routes/play/merlin.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-fc529e69.js",
-      "__mBrother-0f0c2340.js",
+      "__mBrother-a74764b4.js",
       "__tileMovements-bf43bc63.js",
       "_navigation-13fd7038.js",
       "_singletons-d1fb5791.js",
@@ -149,7 +152,7 @@
     ]
   },
   "src/routes/play/[tile_id]/index.svelte": {
-    "file": "pages/play/_tile_id_/index.svelte-09be5969.js",
+    "file": "pages/play/_tile_id_/index.svelte-44499326.js",
     "src": "src/routes/play/[tile_id]/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
@@ -209,8 +212,8 @@
       "src/lib/snapps/escapeGameSnapp.ts"
     ]
   },
-  "__mBrother-0f0c2340.js": {
-    "file": "chunks/_mBrother-0f0c2340.js",
+  "__mBrother-a74764b4.js": {
+    "file": "chunks/_mBrother-a74764b4.js",
     "imports": [
       "_vendor-fc529e69.js",
       "__tileMovements-bf43bc63.js",
