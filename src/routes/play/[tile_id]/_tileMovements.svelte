@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import LineBreak from '$lib/lineBreak.svelte';
 	import type { Movement } from 'src/global';
 
 	export let movements: Movement[];
 </script>
 
-<div class="w-full flex">
+<div class="w-full flex justify-between">
 	{#each movements as movement}
 		<div
 			on:click={() => goto(`/play/${movement.to}`)}

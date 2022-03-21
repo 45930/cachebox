@@ -6,7 +6,7 @@
 	onMount(async () => {
 		await getSession();
 
-		if ($session.user) {
+		if ($session.user != 'null_user') {
 			const tile = $session.tile || 'beach_landing';
 			goto(`/play/${tile}`);
 		} else {

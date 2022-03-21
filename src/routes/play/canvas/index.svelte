@@ -3,8 +3,6 @@
 	import { onMount } from 'svelte';
 	import beach from '$lib/assets/beach.png';
 
-	export let tileConfig: Tile;
-
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
 
