@@ -81,7 +81,7 @@
 </script>
 
 <div class="container flex justify-center flex-wrap">
-	<Canvas {tileConfig} />
+	<Canvas />
 	<div class="relative -top-96 mx-auto">
 		<div id="questions" class="flex justify-end mb-3">
 			<!-- <div class="bg-white opacity-80">Ask:</div> -->

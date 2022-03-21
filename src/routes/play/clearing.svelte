@@ -63,7 +63,7 @@
 </script>
 
 <div class="container flex justify-center flex-wrap">
-	<Canvas {tileConfig} />
+	<Canvas />
 	<div class="relative bottom-36">
 		<div
 			id="tile-prompt"

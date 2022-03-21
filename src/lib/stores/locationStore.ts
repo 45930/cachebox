@@ -17,14 +17,14 @@ const locations: Record<string, Tile> = {
   beach_landing: {
     id: "beach_landing",
     title: "Beach",
-    prompt: ["You roll onto the beach, coughing saltwater, exhausted.  After resting briefly, you take a look around to get your bearings and see some rocky cliffs to one side, and beach continuing as far as you can see in the other direction."],
+    prompt: ["You roll onto the beach, coughing saltwater, exhausted.  After resting briefly, you see some rocky cliffs to one side, and beach continuing as far as you can see in the other direction."],
     movements: [
       {
         prompt: "Try to climb up the cliff to get a better view",
         to: "cliff_top"
       },
       {
-        prompt: "Walk down the beach and see if there's anything beyond the bend",
+        prompt: "Explore the beach",
         to: "beach_1"
       }
     ]
@@ -38,12 +38,12 @@ const locations: Record<string, Tile> = {
     ],
     movements: [
       {
-        prompt: "Climb down to the beach",
-        to: "beach_landing"
-      },
-      {
         prompt: "Cut inland through the dense jungle",
         to: "jungle_path_1"
+      },
+      {
+        prompt: "Climb down to the beach",
+        to: "beach_landing"
       }
     ]
   },
@@ -57,12 +57,12 @@ const locations: Record<string, Tile> = {
         to: "beach_landing"
       },
       {
-        prompt: "Walk the beach the other way",
-        to: "beach_2"
-      },
-      {
         prompt: "Follow the footpath",
         to: "jungle_path_2"
+      },
+      {
+        prompt: "Walk the beach away from the cliffs",
+        to: "beach_2"
       }
     ]
   },
@@ -75,7 +75,7 @@ const locations: Record<string, Tile> = {
     ],
     movements: [
       {
-        prompt: "Walk the beach back in the direction from which you came",
+        prompt: "Return the way you came",
         to: "beach_1"
       }
     ]
@@ -83,8 +83,12 @@ const locations: Record<string, Tile> = {
   jungle_path_1: {
     id: "jungle_path_1",
     title: "Jungle Path",
-    prompt: ["You come across a path.  One way leads to the cliffs near the beach, the other way leads to a simple shack in a clearing."],
+    prompt: ["You reach a 3-way fork.  One direction leads to the cliffs, another leads into a dark cave, the final direction leads to a simple shack in a clearing."],
     movements: [
+      {
+        prompt: "Enter the cave",
+        to: "marcus"
+      },
       {
         prompt: "Walk the path toward the cliffs",
         to: "cliff_top"
@@ -101,21 +105,21 @@ const locations: Record<string, Tile> = {
     prompt: ["You reach a 3-way fork.  One direction leads to the beach, another leads into a dark cave, the final direction leads to a simple shack in a clearing."],
     movements: [
       {
+        prompt: "Walk the path toward the shack",
+        to: "shack"
+      },
+      {
         prompt: "Head toward the beach",
         to: "beach_1"
       },
       {
         prompt: "Enter the cave",
         to: "merlin"
-      },
-      {
-        prompt: "Walk the path toward the shack",
-        to: "shack"
       }
     ]
   },
   shack: {
-    id: "schack",
+    id: "shack",
     title: "Shack",
     prompt: [
       "There is a clearing with a shack, a fire pit, and some fruit trees",
@@ -127,12 +131,12 @@ const locations: Record<string, Tile> = {
       //   to: "in_shack"
       // },
       {
-        prompt: "Go further into the clearing",
-        to: "clearing"
-      },
-      {
         prompt: "Follow a footpath toward the cliffs",
         to: "jungle_path_1"
+      },
+      {
+        prompt: "Go further into the clearing",
+        to: "clearing"
       },
       {
         prompt: "Follow a footpath toward the beach",
@@ -175,13 +179,8 @@ const locations: Record<string, Tile> = {
       },
       {
         type: InteractionType.Dialogue,
-        prompt: "What is this island?",
-        response: "You have died and come to this island as something of a proving ground.  A higher power than either of us will judge your merits on the island and determine your fate."
-      },
-      {
-        type: InteractionType.Dialogue,
         prompt: "Is it possible to leave the island?",
-        response: "You will leave when your fate has been decided, not before."
+        response: "No."
       },
       {
         type: InteractionType.Dialogue,
@@ -242,15 +241,9 @@ const locations: Record<string, Tile> = {
     id: "clearing",
     title: "Clearing",
     prompt: [
-      "You enter a clearing adjacent to the shack.",
-      "There is a cave entrance to one side",
-      "Interesting... is that a keypad?"
+      "You enter a clearing adjacent to the shack and see a keypad sticking out of the brush."
     ],
     movements: [
-      {
-        prompt: "Enter the cave",
-        to: "marcus"
-      },
       {
         prompt: "Go to the shack",
         to: "shack"

@@ -1,8 +1,24 @@
 <script context="module">
 	export const load = async function ({ url, params, fetch, session, context }) {
+		let tileType = '';
+
+		switch (params.tile_id) {
+			case 'beach_landing':
+			case 'beach_1':
+			case 'beach_2':
+				tileType = 'beach';
+				break;
+			case 'cliff_top':
+				tileType = 'cliff';
+				break;
+			default:
+				tileType = 'generic';
+		}
+
 		return {
 			props: {
-				tile: params.tile_id
+				tile: params.tile_id,
+				tileType: tileType
 			}
 		};
 	};
@@ -12,13 +28,16 @@
 	import { locationStore } from '$lib/stores/locationStore';
 	import TilePrompt from './_tilePrompt.svelte';
 	import LineBreak from '$lib/lineBreak.svelte';
-	import TileInteractions from './_tileInteractions.svelte';
 	import TileMovements from './_tileMovements.svelte';
 	import { afterNavigate } from '$app/navigation';
+
+	import Beach from '$lib/canvases/beach.svelte';
+	import Cliff from '$lib/canvases/cliff.svelte';
 
 	import Canvas from '../canvas/index.svelte';
 
 	export let tile;
+	export let tileType;
 
 	afterNavigate(() => {
 		fetch('/gameState', {
@@ -34,7 +53,13 @@
 </script>
 
 <div class="container flex justify-center flex-wrap">
-	<Canvas {tileConfig} />
+	{#if tileType == 'beach'}
+		<Beach templateName={tile} />
+	{:else if tileType == 'cliff'}
+		<Cliff templateName={tile} />
+	{:else}
+		<Canvas />
+	{/if}
 	<div class="relative bottom-36">
 		<div
 			id="tile-prompt"
