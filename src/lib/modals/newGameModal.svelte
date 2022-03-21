@@ -21,7 +21,7 @@
 			body: JSON.stringify(sessionToCreate)
 		});
 
-		getSession();
+		await getSession();
 
 		closeModal();
 		goto('/play/beach_landing');
@@ -29,16 +29,18 @@
 </script>
 
 {#if isOpen}
-	<div class="fixed top-0 bottom-0 right-0 left-0 flex justify-center pointer-events-none">
+	<div class="fixed top-16 bottom-0 right-0 left-0 flex justify-center pointer-events-none">
 		<div class="w-lg h-80 rounded-md p-4 bg-white flex flex-col justify-center pointer-events-auto">
 			<h2 class="text-center text-xl font-bold">Welcome to Cahchebox</h2>
 			<div class="flex flex-col mx-8">
 				<p class="text-left mt-2">
-					This is an escape game based on the <a class="underline" href="https://minaprotocol.com/"
-						>Mina</a
+					This is an escape game based on the <a
+						target="_blank"
+						class="underline"
+						href="https://minaprotocol.com/">Mina</a
 					>
 					blockchain. Read more about the project on our
-					<a class="underline" href="/about">about page</a>.
+					<a on:click={() => closeModal()} class="underline" href="/about">about page</a>.
 				</p>
 				<p class="text-left mt-2">
 					To test your logic and puzzle-solving skills, enter the game below!

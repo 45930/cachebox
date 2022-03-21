@@ -10,7 +10,7 @@
 	onMount(async () => {
 		await getSession();
 
-		if ($session.user) {
+		if ($session.user != 'null_user') {
 			goto(`/play`);
 		} else {
 			openNewGameModal();
