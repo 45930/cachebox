@@ -12,14 +12,33 @@ import {
   Circuit,
   Bool,
   method,
+  Encoding,
+  Encryption,
+  Poseidon,
 } from 'snarkyjs';
 
 import type { EscapeGameSnappInterface } from 'src/global';
 import { StringCircuitValue } from '../snarkyUtils/String';
 import { KeyedMerkleStore } from '../snarkyUtils/KeyedMerkleStore';
 
+await isReady;
+
+let snappPrivkey: PrivateKey;
+let snappAddress: PublicKey;
 
 let keyedMerkleStore = new KeyedMerkleStore();
+
+const gateKey = '00000';
+const labKey = '00000';
+// console.log(snappAddress.toJSON())
+// console.log(`gate key: ${gateKey}`)
+// const gateKeyFields = Encoding.Bijective.Fp.fromString(gateKey);
+// console.log(`gate key fields: ${gateKeyFields}`)
+// const gateKeyCT = Encryption.encrypt(gateKeyFields, snappAddress);
+// console.log(`gate key ct: ${gateKeyCT.cipherText}`)
+
+// const labKeyFields = Encoding.Bijective.Fp.fromString(labKey);
+// const labKeyCT = Encryption.encrypt(labKeyFields, snappAddress);
 
 class EscapeGameSnapp extends SmartContract {
   constructor(address: PublicKey) {
@@ -29,18 +48,51 @@ class EscapeGameSnapp extends SmartContract {
     this.merkleRoot = State(); // merkle root of winning players tree
   }
 
-  deploy(initialBalance: UInt64, gateKey: StringCircuitValue, labKey: StringCircuitValue) {
+  async deploy(initialBalance: UInt64) {
     super.deploy();
+
     this.balance.addInPlace(initialBalance);
-    this.gateKey.set(gateKey.toField());
-    this.labKey.set(labKey.toField());
+    this.gateKey.set(Field(0));
+    this.labKey.set(Field(0));
     this.merkleRoot.set(keyedMerkleStore.getMerkleRoot());
   }
 
-  async guessGateKey(key: StringCircuitValue) {
+  async setCodes(gateKey: string, labKey: string) {
+    const gateKeyFields = Encoding.Bijective.Fp.fromString(gateKey);
+    const gateKeyCT = Encryption.encrypt(gateKeyFields, snappAddress);
+
+    const labKeyFields = Encoding.Bijective.Fp.fromString(labKey);
+    const labKeyCT = Encryption.encrypt(labKeyFields, snappAddress);
+
+    const gkState = await this.gateKey.get();
+    const lkState = await this.labKey.get();
+
+    // Ensure the true values have not been set
+    gkState.assertEquals(Field(0));
+    lkState.assertEquals(Field(0));
+
+    this.gateKey.set(Poseidon.hash(gateKeyCT.cipherText));
+    this.labKey.set(Poseidon.hash(labKeyCT.cipherText));
+  }
+
+  async guessGateKey(guessedKey: string) {
     const gateKeyHash = await this.gateKey.get();
+
+    const guessedKeyFields = Encoding.Bijective.Fp.fromString(guessedKey);
+    const guessedKeyCT = Encryption.encrypt(guessedKeyFields, snappAddress);
+    const guessedKeyHash = Poseidon.hash(guessedKeyCT.cipherText);
+
+    Circuit.asProver(() => {
+      console.log(`pubk: ${snappAddress.toJSON()}`)
+      console.log(`gk: ${guessedKey}`)
+      console.log(`gkf: ${guessedKeyFields}`)
+      console.log(`gkct: ${guessedKeyCT.cipherText}`)
+      console.log(`ga: ${gateKeyHash}`)
+      console.log(`gu: ${guessedKeyHash}`)
+    });
+
     const isCorrect = Circuit.if(
-      gateKeyHash.equals(key.hash()),
+      gateKeyHash.equals(guessedKeyHash),
       new Bool(true),
       new Bool(false),
     )
@@ -49,10 +101,15 @@ class EscapeGameSnapp extends SmartContract {
     return isCorrect;
   }
 
-  async guessLabKey(key: StringCircuitValue) {
-    const gateKeyHash = await this.labKey.get();
+  async guessLabKey(guessedKey: string) {
+    const labKeyHash = await this.labKey.get();
+
+    const guessedKeyFields = Encoding.Bijective.Fp.fromString(guessedKey);
+    const guessedKeyCT = Encryption.encrypt(guessedKeyFields, snappAddress);
+    const guessedKeyHash = Poseidon.hash(guessedKeyCT.cipherText);
+
     const isCorrect = Circuit.if(
-      gateKeyHash.equals(key.hash()),
+      labKeyHash.equals(guessedKeyHash),
       new Bool(true),
       new Bool(false),
     )
@@ -77,8 +134,8 @@ Reflect.metadata('design:paramtypes', [String])(EscapeGameSnapp.prototype, 'gues
 method(EscapeGameSnapp.prototype, 'guessLabKey');
 
 export async function deploy() {
-  const snappPrivkey = PrivateKey.random();
-  const snappAddress = snappPrivkey.toPublicKey();
+  snappPrivkey = PrivateKey.random();
+  snappAddress = snappPrivkey.toPublicKey();
   const snapp = new EscapeGameSnapp(snappAddress);
 
   const snappInterface: EscapeGameSnappInterface = {
@@ -95,29 +152,31 @@ export async function deploy() {
     address: snappAddress,
   };
 
-  console.log(snapp);
-
   const tx = Mina.transaction(DEPLOYER_ACCOUNT, async () => {
     console.log('Deploying Escape Game Snapp...');
     const p = await Party.createSigned(USER_ACCOUNT);
-    const gateKey = new StringCircuitValue('00000');
-    const labKey = new StringCircuitValue('00000');
+
+    // const gateKeyHash = Poseidon.hash(gateKeyCT.cipherText);
+    // const labKeyHash = Poseidon.hash(labKeyCT.cipherText);
+
+    // console.log(`gkh: ${gateKeyHash}`)
     p.balance.subInPlace(ONE_MINA);
-    snapp.deploy(ONE_MINA, gateKey, labKey);
+    await snapp.deploy(ONE_MINA);
     console.log(snapp);
   });
   await tx.send().wait();
   await Mina.getAccount(snappAddress);
-  console.log(snappAddress);
-  console.log(Local);
+
+  const tx2 = Mina.transaction(DEPLOYER_ACCOUNT, async () => {
+    await snapp.setCodes(gateKey, labKey);
+  });
+  await tx2.send().wait();
 
   console.log('Deployed...')
   return snappInterface;
 }
 
 export async function getSnappState(snappAddress: PublicKey) {
-  console.log(snappAddress)
-  console.log(Local)
   const snappState = (await Mina.getAccount(snappAddress)).snapp.appState;
   const gateKey = StringCircuitValue.fromField(snappState[0]).toString();
   const labKey = StringCircuitValue.fromField(snappState[1]).toString();
@@ -126,17 +185,19 @@ export async function getSnappState(snappAddress: PublicKey) {
 
 export async function guessGateKey(snappAddress: PublicKey, key: string) {
   const snapp = new EscapeGameSnapp(snappAddress);
-  const guess = new StringCircuitValue(key);
   const tx = Mina.transaction(USER_ACCOUNT, async () => {
     console.log(`Guessing Key ${key}...`);
-    await snapp.guessGateKey(guess);
+    await snapp.guessGateKey(key);
   });
+
+  let resp;
   try {
-    await tx.send().wait();
+    resp = await tx.send().wait();
   } catch (err) {
     console.log(`Transaction Failed! Error: ${err}`);
   }
 
+  console.log(resp);
   // TODO: need a better way to store winners, ideally leverage off-chain storage from another team
   const trueKey = (await getSnappState(snappAddress)).gateKey;
   console.log(`True Key: ${trueKey}`)
@@ -149,10 +210,9 @@ export async function guessGateKey(snappAddress: PublicKey, key: string) {
 
 export async function guessLabKey(snappAddress: PublicKey, key: string) {
   const snapp = new EscapeGameSnapp(snappAddress);
-  const guess = new StringCircuitValue(key);
   const tx = Mina.transaction(USER_ACCOUNT, async () => {
     console.log(`Guessing Key ${key}...`);
-    await snapp.guessLabKey(guess);
+    await snapp.guessLabKey(key);
   });
   try {
     await tx.send().wait();
@@ -160,6 +220,7 @@ export async function guessLabKey(snappAddress: PublicKey, key: string) {
     console.log(`Transaction Failed! Error: ${err}`);
   }
 
+  console.log(tx);
   // TODO: need a better way to store winners, ideally leverage off-chain storage from another team
   const trueKey = (await getSnappState(snappAddress)).labKey;
   console.log(`True Key: ${trueKey}`)
