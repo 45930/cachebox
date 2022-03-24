@@ -11,6 +11,13 @@
 			case 'cliff_top':
 				tileType = 'cliff';
 				break;
+			case 'jungle_path_1':
+			case 'jungle_path_2':
+				tileType = 'jungle';
+				break;
+			case 'shack':
+				tileType = 'shack';
+				break;
 			default:
 				tileType = 'generic';
 		}
@@ -35,6 +42,8 @@
 	import Cliff from '$lib/canvases/cliff.svelte';
 
 	import Canvas from '../canvas/index.svelte';
+	import Jungle from '$lib/canvases/jungle.svelte';
+	import Shack from '$lib/canvases/shack.svelte';
 
 	export let tile;
 	export let tileType;
@@ -57,6 +66,10 @@
 		<Beach templateName={tile} />
 	{:else if tileType == 'cliff'}
 		<Cliff templateName={tile} />
+	{:else if tileType == 'jungle'}
+		<Jungle templateName={tile} />
+	{:else if tileType == 'shack'}
+		<Shack />
 	{:else}
 		<Canvas />
 	{/if}
