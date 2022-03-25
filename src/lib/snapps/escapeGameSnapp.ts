@@ -16,11 +16,12 @@ import {
   Encryption,
   Poseidon,
   Group,
+  Signature,
 } from 'snarkyjs';
 
 import type { EscapeGameSnappInterface } from 'src/global';
 import { StringCircuitValue } from '../snarkyUtils/String';
-import { KeyedMerkleStore } from '../snarkyUtils/KeyedMerkleStore';
+
 
 await isReady;
 
@@ -29,118 +30,69 @@ let snappAddress: PublicKey;
 let gateGroup: Group;
 let labGroup: Group;
 
-let keyedMerkleStore = new KeyedMerkleStore();
-
 const gateKey = '00000';
 const labKey = '00000';
-// console.log(snappAddress.toJSON())
-// console.log(`gate key: ${gateKey}`)
-// const gateKeyFields = Encoding.Bijective.Fp.fromString(gateKey);
-// console.log(`gate key fields: ${gateKeyFields}`)
-// const gateKeyCT = Encryption.encrypt(gateKeyFields, snappAddress);
-// console.log(`gate key ct: ${gateKeyCT.cipherText}`)
-
-// const labKeyFields = Encoding.Bijective.Fp.fromString(labKey);
-// const labKeyCT = Encryption.encrypt(labKeyFields, snappAddress);
 
 class EscapeGameSnapp extends SmartContract {
   constructor(address: PublicKey) {
     super(address);
-    this.gateKeyGroup1 = State();
-    this.gateKeyGroup2 = State();
     this.gateKeyCT1 = State();
     this.gateKeyCT2 = State();
-    this.labKeyGroup1 = State();
-    this.labKeyGroup2 = State();
     this.labKeyCT1 = State();
     this.labKeyCT2 = State();
     // this.merkleRoot = State(); // merkle root of winning players tree
   }
 
-  async deploy(initialBalance: UInt64, gateKey: string, labKey: string) {
+  async deploy(initialBalance: UInt64, gateKeyCT: Field[], labKeyCT: Field[]) {
     super.deploy();
     this.balance.addInPlace(initialBalance);
 
-    const gateKeyFields = Encoding.Bijective.Fp.fromString(gateKey);
-    const gateKeyCT = Encryption.encrypt(gateKeyFields, snappAddress);
+    console.assert(gateKeyCT.length == 2, 'gate ciphertext not the correct size')
+    console.assert(labKeyCT.length == 2, 'lab ciphertext not the correct size')
 
-    const labKeyFields = Encoding.Bijective.Fp.fromString(labKey);
-    const labKeyCT = Encryption.encrypt(labKeyFields, snappAddress);
+    this.gateKeyCT1.set(gateKeyCT[0]);
+    this.gateKeyCT2.set(gateKeyCT[1]);
 
-    console.assert(gateKeyCT.cipherText.length == 2, 'ciphertext not the correct size')
-    this.gateKeyGroup1.set(gateKeyCT.publicKey.x);
-    this.gateKeyGroup2.set(gateKeyCT.publicKey.y);
-    this.gateKeyCT1.set(gateKeyCT.cipherText[0]);
-    this.gateKeyCT2.set(gateKeyCT.cipherText[1]);
-    this.labKeyGroup1.set(labKeyCT.publicKey.x);
-    this.labKeyGroup2.set(labKeyCT.publicKey.y);
-    this.labKeyCT1.set(labKeyCT.cipherText[0]);
-    this.labKeyCT2.set(labKeyCT.cipherText[1]);
+    this.labKeyCT1.set(labKeyCT[0]);
+    this.labKeyCT2.set(labKeyCT[1]);
   }
 
-  async guessGateKey(guessedKey: string) {
-    const gateKeyGroup1: Field = await this.gateKeyGroup1.get();
-    const gateKeyGroup2: Field = await this.gateKeyGroup2.get();
+  async guessGateKey(guessedKey: string, decryptionKey: Group, user: PublicKey) {
     const gateKeyCT1: Field = await this.gateKeyCT1.get();
     const gateKeyCT2: Field = await this.gateKeyCT2.get();
 
-    Circuit.asProver(() => {
-      console.log('1', gateKeyCT1, gateGroup);
-    })
-
-
-    const group = new Group({ x: gateKeyGroup1, y: gateKeyGroup2 });
-    const gateKeyDecrypted = Encryption.decrypt({ publicKey: group, cipherText: [gateKeyCT1, gateKeyCT2] }, snappPrivkey);
-
-    Circuit.asProver(() => {
-      console.log('2', gateKeyDecrypted);
-    })
-
+    const gateKeyDecrypted = Encryption.decrypt({ publicKey: decryptionKey, cipherText: [gateKeyCT1, gateKeyCT2] }, snappPrivkey);
     const guessedKeyFields = Encoding.Bijective.Fp.fromString(guessedKey);
 
-    Circuit.asProver(() => {
-      console.log(`pubk: ${snappAddress.toJSON()}`)
-      console.log(`gk: ${guessedKey}`)
-      console.log(`gkf: ${guessedKeyFields} , length: ${guessedKeyFields.length}`)
-      console.log(`d: ${gateKeyDecrypted}  , length: ${gateKeyDecrypted.length}`)
-      console.log(gateKeyDecrypted.toString(), guessedKeyFields.toString())
-      console.log(gateKeyDecrypted.toString() == guessedKeyFields.toString())
-      console.log(gateKeyDecrypted[0].equals(guessedKeyFields[0]));
-    });
+    gateKeyDecrypted[0].assertEquals(guessedKeyFields[0])
 
-    return gateKeyDecrypted[0].equals(guessedKeyFields[0]).toBoolean();
+    const msg = [user.g.x, user.g.y, Field(1)]; // this user beat puzzle 1
+    const sig = Signature.create(snappPrivkey, msg);
+    return sig;
   }
 
-  async guessLabKey(guessedKey: string) {
-    const labKeyHash = await this.labKey.get();
+  async guessLabKey(guessedKey: string, decryptionKey: Group, user: PublicKey) {
+    const labKeyCT1: Field = await this.labKeyCT1.get();
+    const labKeyCT2: Field = await this.labKeyCT2.get();
 
+    const labKeyDecrypted = Encryption.decrypt({ publicKey: decryptionKey, cipherText: [labKeyCT1, labKeyCT2] }, snappPrivkey);
     const guessedKeyFields = Encoding.Bijective.Fp.fromString(guessedKey);
-    const guessedKeyCT = Encryption.encrypt(guessedKeyFields, snappAddress);
-    const guessedKeyHash = Poseidon.hash(guessedKeyCT.cipherText);
 
-    const isCorrect = Circuit.if(
-      labKeyHash.equals(guessedKeyHash),
-      new Bool(true),
-      new Bool(false),
-    )
+    labKeyDecrypted[0].assertEquals(guessedKeyFields[0])
 
-    // TODO: add to merkle proof
-    return isCorrect;
+    const msg = [user.g.x, user.g.y, Field(3)]; // this user beat puzzle 3
+    const sig = Signature.create(snappPrivkey, msg);
+    return sig;
   }
 }
 
 // manually apply decorators:
 
 // @state(Field) gateKey
-state(Field)(EscapeGameSnapp.prototype, 'gateKeyGroup1');
-state(Field)(EscapeGameSnapp.prototype, 'gateKeyGroup2');
 state(Field)(EscapeGameSnapp.prototype, 'gateKeyCT1');
 state(Field)(EscapeGameSnapp.prototype, 'gateKeyCT2');
-state(Field)(EscapeGameSnapp.prototype, 'labKeyGroup1');
-state(Field)(EscapeGameSnapp.prototype, 'labKeyGroup2');
 state(Field)(EscapeGameSnapp.prototype, 'labKeyCT1');
 state(Field)(EscapeGameSnapp.prototype, 'labKeyCT2');
-// state(Field)(EscapeGameSnapp.prototype, 'merkleRoot');
 
 // @method
 Reflect.metadata('design:paramtypes', [String])(EscapeGameSnapp.prototype, 'guessGateKey');
@@ -155,15 +107,14 @@ export async function deploy() {
   const snapp = new EscapeGameSnapp(snappAddress);
 
   const snappInterface: EscapeGameSnappInterface = {
-    title: 'Escape Game Snapp',
-    guessGateKey(phrase: string) {
-      return guessGateKey(snappAddress, phrase);
+    guessGateKey(key: string) {
+      return guessGateKey(snappAddress, key);
     },
-    guessLabKey(phrase: string) {
-      return guessLabKey(snappAddress, phrase);
+    guessUnlabeledPw(key: string) {
+      return guessLabKey(snappAddress, key);
     },
-    getSnappState() {
-      return getSnappState(snappAddress);
+    guessLabKey(key: string) {
+      return guessLabKey(snappAddress, key);
     },
     address: snappAddress,
   };
@@ -172,12 +123,16 @@ export async function deploy() {
     console.log('Deploying Escape Game Snapp...');
     const p = await Party.createSigned(USER_ACCOUNT);
 
-    // const gateKeyHash = Poseidon.hash(gateKeyCT.cipherText);
-    // const labKeyHash = Poseidon.hash(labKeyCT.cipherText);
+    const gateKeyFields = Encoding.Bijective.Fp.fromString(gateKey);
+    const gateKeyCT = Encryption.encrypt(gateKeyFields, snappAddress);
+    gateGroup = gateKeyCT.publicKey;
 
-    // console.log(`gkh: ${gateKeyHash}`)
+    const labKeyFields = Encoding.Bijective.Fp.fromString(labKey);
+    const labKeyCT = Encryption.encrypt(labKeyFields, snappAddress);
+    labGroup = labKeyCT.publicKey;
+
     p.balance.subInPlace(ONE_MINA);
-    await snapp.deploy(ONE_MINA, gateKey, labKey);
+    await snapp.deploy(ONE_MINA, gateKeyCT.cipherText, labKeyCT.cipherText)
     console.log(snapp);
   });
   await tx.send().wait();
@@ -187,47 +142,53 @@ export async function deploy() {
   return snappInterface;
 }
 
-export async function getSnappState(snappAddress: PublicKey) {
-  const snappState = (await Mina.getAccount(snappAddress)).snapp.appState;
-  const gateKey = StringCircuitValue.fromField(snappState[0]).toString();
-  const labKey = StringCircuitValue.fromField(snappState[1]).toString();
-  return { gateKey, labKey };
-}
-
 export async function guessGateKey(snappAddress: PublicKey, key: string) {
   const snapp = new EscapeGameSnapp(snappAddress);
-  console.log(`Guessing Key ${key}...`);
-  const resp = await snapp.guessGateKey(key);
+  const user = PublicKey.fromPrivateKey(USER_ACCOUNT);
 
-  // TODO: need a better way to store winners, ideally leverage off-chain storage from another team
-  if (resp) {
-    return 'winner'
-  } else {
-    return 'loser'
+  console.log(`Guessing Key ${key}...`);
+  let resp;
+  try {
+    resp = await snapp.guessGateKey(key, gateGroup, user);
+  } catch (err) {
+    return null
   }
+
+  return resp;
+}
+
+export async function guessUnlabeledPw(snappAddress: PublicKey, key: string) {
+  const snapp = new EscapeGameSnapp(snappAddress);
+  console.log(`Guessing Key ${key}...`);
+  const user = PublicKey.fromPrivateKey(USER_ACCOUNT);
+
+  console.log(`Guessing Key ${key}...`);
+  let resp;
+  try {
+    resp = await snapp.guessLabKey(key, labGroup, user);
+  } catch (err) {
+    console.log(err);
+    return null
+  }
+
+  return resp;
 }
 
 export async function guessLabKey(snappAddress: PublicKey, key: string) {
   const snapp = new EscapeGameSnapp(snappAddress);
-  const tx = Mina.transaction(USER_ACCOUNT, async () => {
-    console.log(`Guessing Key ${key}...`);
-    await snapp.guessLabKey(key);
-  });
+  console.log(`Guessing Key ${key}...`);
+  const user = PublicKey.fromPrivateKey(USER_ACCOUNT);
+
+  console.log(`Guessing Key ${key}...`);
+  let resp;
   try {
-    await tx.send().wait();
+    resp = await snapp.guessLabKey(key, labGroup, user);
   } catch (err) {
-    console.log(`Transaction Failed! Error: ${err}`);
+    console.log(err);
+    return null
   }
 
-  console.log(tx);
-  // TODO: need a better way to store winners, ideally leverage off-chain storage from another team
-  const trueKey = (await getSnappState(snappAddress)).labKey;
-  console.log(`True Key: ${trueKey}`)
-  if (key == trueKey.replace(/\0/g, '')) {
-    return 'winner'
-  } else {
-    return 'loser'
-  }
+  return resp;
 }
 
 export async function load() {

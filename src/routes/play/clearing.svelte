@@ -9,8 +9,9 @@
 	import { openModal } from 'svelte-modals';
 	import ClearingKeypadModal from '$lib/modals/clearingKeypadModal.svelte';
 	import { loadSnarky, snarkyStore, deployedSnappsStore } from '$lib/stores/minaStore';
-	import Canvas from './canvas/index.svelte';
+	import Clearing from '$lib/canvases/jungle.svelte';
 	import { session } from '$app/stores';
+	import type { Signature } from 'snarkyjs';
 
 	$: isSnarkyLoaded = false;
 
@@ -36,6 +37,20 @@
 		$session = data;
 	};
 
+	const addSignatureToSession = async function (sig: Signature) {
+		const sessionResp = await fetch('/gameState', {
+			headers: { 'content-type': 'application/json' },
+			method: 'PUT',
+			body: JSON.stringify({
+				gateSignature: sig
+			})
+		});
+
+		const data = await sessionResp.json();
+
+		$session = data;
+	};
+
 	const checkSnarkyLoaded = function () {
 		if (!isSnarkyLoaded) {
 			loadSnarky().then(() => {
@@ -52,10 +67,11 @@
 		const escapeGameSnapp = $deployedSnappsStore;
 		const winner = await escapeGameSnapp.guessGateKey(key);
 
-		if (winner == 'winner') {
-			goto('/play/lab_hall');
-		} else {
+		if (!winner) {
 			goto('/play/loser');
+		} else {
+			await addSignatureToSession(winner);
+			goto('/play/lab_hall');
 		}
 	};
 
@@ -63,7 +79,7 @@
 </script>
 
 <div class="container flex justify-center flex-wrap">
-	<Canvas />
+	<Clearing templateName="clearing" />
 	<div class="relative bottom-36">
 		<div
 			id="tile-prompt"

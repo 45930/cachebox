@@ -1,42 +1,14 @@
 /// <reference types="@sveltejs/kit" />
 
-import type { Field, PublicKey } from "snarkyjs"
+import type { PublicKey, Signature } from "snarkyjs"
 import { InteractionType } from "./lib/enums";
 import { PublicKey } from 'snarkyjs';
 
-export type DeployedSnappInterface = {
-  title: string,
-  address: PublicKey,
-  getSnappState(): Promise<any>,
-  subtitle?: string,
-  reward?: number,
-  ipfsPromptHash?: string,
-  ipfsSolvedHash?: string
-}
-
-interface MontyHallSnappInterface extends DeployedSnappInterface {
-  guessDoor(door: number): Promise<string>;
-  evaluate(isSwitching: boolean): Promise<string>;
-  reset(newDoor: number): Promise<void>;
-  getSnappState(): Promise<{
-    winningDoor: string;
-    guessedDoor: sting;
-  }>;
-}
-
-interface SecretPhraseSnappInterface extends DeployedSnappInterface {
-  guessPhrase(phrase: string): Promise<string>;
-  getSnappState(): Promise<{
-    secretPhraseHash: string;
-  }>;
-}
-
-interface EscapeGameSnappInterface extends DeployedSnappInterface {
-  guessGateKey(key: string): Promise<string>;
-  guessLabKey(key: string): Promise<string>;
-  getSnappState(): Promise<{
-    gateKey: string;
-  }>;
+interface EscapeGameSnappInterface {
+  address: PublicKey;
+  guessGateKey(key: string): Promise<Signature> | Promise<null>;
+  guessUnlabeledPw(key: string): Promise<Signature> | Promise<null>;
+  guessLabKey(key: string): Promise<Signature> | Promise<null>;
 }
 
 type LocationId = string;
