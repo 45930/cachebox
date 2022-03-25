@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Tile } from 'src/global';
 	import { onMount } from 'svelte';
+	import clearing_src from '$lib/assets/clearing.jpeg';
 	import jungle1_src from '$lib/assets/jungle1.jpeg';
 	import jungle2_src from '$lib/assets/jungle2.jpeg';
 	import { afterNavigate } from '$app/navigation';
@@ -25,6 +26,9 @@
 		}
 		if (templateName == 'jungle_path_2') {
 			template.src = jungle2_src;
+		}
+		if (templateName == 'clearing') {
+			template.src = clearing_src;
 		}
 
 		draw();

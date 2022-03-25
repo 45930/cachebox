@@ -10,6 +10,8 @@
 	import ClearingKeypadModal from '$lib/modals/clearingKeypadModal.svelte';
 	import { loadSnarky, snarkyStore, deployedSnappsStore } from '$lib/stores/minaStore';
 	import Canvas from './canvas/index.svelte';
+	import type { Signature } from 'snarkyjs';
+	import { session } from '$app/stores';
 
 	$: isSnarkyLoaded = false;
 
@@ -25,6 +27,20 @@
 		}
 	};
 
+	const addSignatureToSession = async function (sig: Signature) {
+		const sessionResp = await fetch('/gameState', {
+			headers: { 'content-type': 'application/json' },
+			method: 'PUT',
+			body: JSON.stringify({
+				labSignature: sig
+			})
+		});
+
+		const data = await sessionResp.json();
+
+		$session = data;
+	};
+
 	const openClearingModal = () => {
 		openModal(ClearingKeypadModal, { onSubmit: onClearingModalSubmit });
 	};
@@ -33,10 +49,11 @@
 		const escapeGameSnapp = $deployedSnappsStore;
 		const winner = await escapeGameSnapp.guessLabKey(key);
 
-		if (winner == 'winner') {
-			goto('/play/winner');
-		} else {
+		if (!winner) {
 			goto('/play/loser');
+		} else {
+			await addSignatureToSession(winner);
+			goto('/play/winner');
 		}
 	};
 
