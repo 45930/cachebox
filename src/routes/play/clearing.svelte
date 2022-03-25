@@ -9,7 +9,7 @@
 	import { openModal } from 'svelte-modals';
 	import ClearingKeypadModal from '$lib/modals/clearingKeypadModal.svelte';
 	import { loadSnarky, snarkyStore, deployedSnappsStore } from '$lib/stores/minaStore';
-	import Clearing from '$lib/canvases/jungle.svelte';
+	import Clearing from '$lib/canvases/static.svelte';
 	import { session } from '$app/stores';
 	import type { Signature } from 'snarkyjs';
 

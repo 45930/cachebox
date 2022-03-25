@@ -30,8 +30,8 @@ let snappAddress: PublicKey;
 let gateGroup: Group;
 let labGroup: Group;
 
-const gateKey = '00000';
-const labKey = '00000';
+const gateKey = import.meta.env.VITE_GATE_KEY;
+const labKey = import.meta.env.VITE_LAB_KEY;
 
 class EscapeGameSnapp extends SmartContract {
   constructor(address: PublicKey) {
@@ -40,7 +40,6 @@ class EscapeGameSnapp extends SmartContract {
     this.gateKeyCT2 = State();
     this.labKeyCT1 = State();
     this.labKeyCT2 = State();
-    // this.merkleRoot = State(); // merkle root of winning players tree
   }
 
   async deploy(initialBalance: UInt64, gateKeyCT: Field[], labKeyCT: Field[]) {

@@ -1,6 +1,9 @@
 <script lang="ts">
 	import type { Tile } from 'src/global';
 	import { onMount } from 'svelte';
+	import lab_hall_src from '$lib/assets/lab_hall.png';
+	import lab_2_src from '$lib/assets/lab2.png';
+	import cave_src from '$lib/assets/cave.jpeg';
 	import clearing_src from '$lib/assets/clearing.jpeg';
 	import jungle1_src from '$lib/assets/jungle1.jpeg';
 	import jungle2_src from '$lib/assets/jungle2.jpeg';
@@ -29,6 +32,15 @@
 		}
 		if (templateName == 'clearing') {
 			template.src = clearing_src;
+		}
+		if (templateName == 'cave') {
+			template.src = cave_src;
+		}
+		if (templateName == 'lab_hall') {
+			template.src = lab_hall_src;
+		}
+		if (templateName == 'lab_2') {
+			template.src = lab_2_src;
 		}
 
 		draw();
