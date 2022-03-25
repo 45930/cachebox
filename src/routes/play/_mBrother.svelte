@@ -3,7 +3,7 @@
 	import LineBreak from '$lib/lineBreak.svelte';
 	import TileMovements from './[tile_id]/_tileMovements.svelte';
 	import { InteractionType } from '$lib/enums';
-	import Canvas from './canvas/index.svelte';
+	import Cave from '$lib/canvases/static.svelte';
 	import { afterUpdate } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 	import { session } from '$app/stores';
@@ -81,7 +81,7 @@
 </script>
 
 <div class="container flex justify-center flex-wrap">
-	<Canvas />
+	<Cave templateName="cave" />
 	<div class="relative -top-96 mx-auto">
 		<div id="questions" class="flex justify-end mb-3">
 			<!-- <div class="bg-white opacity-80">Ask:</div> -->

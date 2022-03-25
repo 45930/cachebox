@@ -9,7 +9,7 @@
 	import { openModal } from 'svelte-modals';
 	import ClearingKeypadModal from '$lib/modals/clearingKeypadModal.svelte';
 	import { loadSnarky, snarkyStore, deployedSnappsStore } from '$lib/stores/minaStore';
-	import Canvas from './canvas/index.svelte';
+	import LabHall from '$lib/canvases/static.svelte';
 	import type { Signature } from 'snarkyjs';
 	import { session } from '$app/stores';
 
@@ -61,7 +61,7 @@
 </script>
 
 <div class="container flex justify-center flex-wrap">
-	<Canvas />
+	<LabHall templateName="lab_hall" />
 	<div class="relative bottom-36">
 		<div
 			id="tile-prompt"

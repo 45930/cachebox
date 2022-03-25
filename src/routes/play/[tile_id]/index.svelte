@@ -11,15 +11,11 @@
 			case 'cliff_top':
 				tileType = 'cliff';
 				break;
-			case 'jungle_path_1':
-			case 'jungle_path_2':
-				tileType = 'jungle';
-				break;
 			case 'shack':
 				tileType = 'shack';
 				break;
 			default:
-				tileType = 'generic';
+				tileType = 'static';
 		}
 
 		return {
@@ -39,11 +35,11 @@
 	import { afterNavigate } from '$app/navigation';
 
 	import Beach from '$lib/canvases/beach.svelte';
-	import Cliff from '$lib/canvases/cliff.svelte';
 
 	import Canvas from '../canvas/index.svelte';
-	import Jungle from '$lib/canvases/jungle.svelte';
+	import Static from '$lib/canvases/static.svelte';
 	import Shack from '$lib/canvases/shack.svelte';
+	import Cliff from '$lib/canvases/cliff.svelte';
 
 	export let tile;
 	export let tileType;
@@ -66,12 +62,10 @@
 		<Beach templateName={tile} />
 	{:else if tileType == 'cliff'}
 		<Cliff templateName={tile} />
-	{:else if tileType == 'jungle'}
-		<Jungle templateName={tile} />
 	{:else if tileType == 'shack'}
 		<Shack />
 	{:else}
-		<Canvas />
+		<Static templateName={tile} />
 	{/if}
 	<div class="relative bottom-36">
 		<div
