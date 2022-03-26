@@ -126,10 +126,10 @@ const locations: Record<string, Tile> = {
       "No one seems to be around..."
     ],
     movements: [
-      // {
-      //   prompt: "Enter the shack",
-      //   to: "in_shack"
-      // },
+      {
+        prompt: "Enter the shack",
+        to: "in_shack"
+      },
       {
         prompt: "Follow a footpath toward the cliffs",
         to: "jungle_path_1"
@@ -143,6 +143,18 @@ const locations: Record<string, Tile> = {
         to: "jungle_path_2"
       }
     ]
+  },
+  in_shack: {
+    id: "in_shack",
+    title: "In Shack",
+    prompt: [
+    ],
+    movements: [
+      {
+        prompt: "Exit the shack",
+        to: "shack"
+      }
+    ],
   },
   merlin: {
     id: "merlin",
@@ -202,7 +214,7 @@ const locations: Record<string, Tile> = {
     movements: [
       {
         prompt: "Leave Marcus' Cave",
-        to: "clearing"
+        to: "jungle_path_1"
       }
     ],
     interactions: [
@@ -296,9 +308,6 @@ const locations: Record<string, Tile> = {
     id: 'lab_2',
     title: "Lab 2",
     prompt: [
-      "You walk up a circular ramp",
-      "The radius of the circle is 20/pi meters and you walk 50 meters to end up directly above where you began",
-      "How high are you?"
     ],
     movements: [
       {
@@ -311,15 +320,6 @@ const locations: Record<string, Tile> = {
     id: 'lab_3',
     title: "Lab 3",
     prompt: [
-      "Giovani's Room",
-      "Player Pano",
-      "Canery Row",
-      "The Blust Eye",
-      "Ulyses",
-      "184",
-      "Wrinkle in Time",
-      "King Lea",
-      "Suttre"
     ],
     movements: [
       {
@@ -336,14 +336,14 @@ const locations: Record<string, Tile> = {
     id: 'unlabeled_room',
     title: '???',
     prompt: [
-      "FER_XIWPCOBOLQ",
-      "FER_EDNLDKBSAS",
-      "FER_FVKBRTQGEF",
-      "FER_MBKHHRVEIQ",
-      "FER_ULPDJNBRNY",
-      "FER_FHLPCNDNGT",
-      "FER_JWKSQDQNNL",
-      "IIO_TEIDSKVOFQ"
+      'ugi_akrrmgmriu',
+      'ugi_ifinncmvyw',
+      'ugi_jxfdalahpq',
+      'ugi_qdfjrjfhfu',
+      'ugi_ynkftfmukb',
+      'ugi_jjgrmfoqdx',
+      'ugi_nyfu_waqkp',
+      'xkf_xgdfbcfrcu'
     ],
     movements: [
       {

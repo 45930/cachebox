@@ -68,12 +68,16 @@
 		<Static templateName={tile} />
 	{/if}
 	<div class="relative bottom-36">
-		<div
-			id="tile-prompt"
-			class="p-2 mb-12 rounded border-neutral-200 border-solid border-2 bg-white opacity-80"
-		>
-			<TilePrompt prompt={tileConfig.prompt} />
-		</div>
+		{#if tileConfig.prompt.length > 0}
+			<div
+				id="tile-prompt"
+				class="p-2 mb-12 rounded border-neutral-200 border-solid border-2 bg-white opacity-80"
+			>
+				<TilePrompt prompt={tileConfig.prompt} />
+			</div>
+		{:else}
+			<div id="tile-prompt" class="p-2 mb-36" />
+		{/if}
 		<LineBreak />
 		<div
 			id="tile-movements"

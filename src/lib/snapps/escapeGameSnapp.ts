@@ -20,7 +20,6 @@ import {
 } from 'snarkyjs';
 
 import type { EscapeGameSnappInterface } from 'src/global';
-import { StringCircuitValue } from '../snarkyUtils/String';
 
 
 await isReady;
@@ -29,9 +28,11 @@ let snappPrivkey: PrivateKey;
 let snappAddress: PublicKey;
 let gateGroup: Group;
 let labGroup: Group;
+let unlabeledPwGroup: Group;
 
 const gateKey = import.meta.env.VITE_GATE_KEY;
 const labKey = import.meta.env.VITE_LAB_KEY;
+const unlabeledPw = import.meta.env.VITE_UNLABELED_PW;
 
 class EscapeGameSnapp extends SmartContract {
   constructor(address: PublicKey) {
@@ -40,20 +41,27 @@ class EscapeGameSnapp extends SmartContract {
     this.gateKeyCT2 = State();
     this.labKeyCT1 = State();
     this.labKeyCT2 = State();
+    this.unlabeledPwCT1 = State();
+    this.unlabeledPwCT2 = State();
+
   }
 
-  async deploy(initialBalance: UInt64, gateKeyCT: Field[], labKeyCT: Field[]) {
+  async deploy(initialBalance: UInt64, gateKeyCT: Field[], labKeyCT: Field[], unlabeledPwCT: Field[]) {
     super.deploy();
     this.balance.addInPlace(initialBalance);
 
     console.assert(gateKeyCT.length == 2, 'gate ciphertext not the correct size')
     console.assert(labKeyCT.length == 2, 'lab ciphertext not the correct size')
+    console.assert(unlabeledPwCT.length == 2, 'unlabeled room ciphertext not the correct size')
 
     this.gateKeyCT1.set(gateKeyCT[0]);
     this.gateKeyCT2.set(gateKeyCT[1]);
 
     this.labKeyCT1.set(labKeyCT[0]);
     this.labKeyCT2.set(labKeyCT[1]);
+
+    this.unlabeledPwCT1.set(unlabeledPwCT[0]);
+    this.unlabeledPwCT2.set(unlabeledPwCT[1]);
   }
 
   async guessGateKey(guessedKey: string, decryptionKey: Group, user: PublicKey) {
@@ -83,6 +91,20 @@ class EscapeGameSnapp extends SmartContract {
     const sig = Signature.create(snappPrivkey, msg);
     return sig;
   }
+
+  async guessUnlabeledPw(guessedPw: string, decryptionKey: Group, user: PublicKey) {
+    const unlabeledPwCT1: Field = await this.unlabeledPwCT1.get();
+    const unlabeledPwCT2: Field = await this.unlabeledPwCT2.get();
+
+    const unlabaledPwDecrypted = Encryption.decrypt({ publicKey: decryptionKey, cipherText: [unlabeledPwCT1, unlabeledPwCT2] }, snappPrivkey);
+    const guessedPwFields = Encoding.Bijective.Fp.fromString(guessedPw);
+
+    unlabaledPwDecrypted[0].assertEquals(guessedPwFields[0])
+
+    const msg = [user.g.x, user.g.y, Field(2)]; // this user beat puzzle 2
+    const sig = Signature.create(snappPrivkey, msg);
+    return sig;
+  }
 }
 
 // manually apply decorators:
@@ -92,6 +114,8 @@ state(Field)(EscapeGameSnapp.prototype, 'gateKeyCT1');
 state(Field)(EscapeGameSnapp.prototype, 'gateKeyCT2');
 state(Field)(EscapeGameSnapp.prototype, 'labKeyCT1');
 state(Field)(EscapeGameSnapp.prototype, 'labKeyCT2');
+state(Field)(EscapeGameSnapp.prototype, 'unlabeledPwCT1');
+state(Field)(EscapeGameSnapp.prototype, 'unlabeledPwCT2');
 
 // @method
 Reflect.metadata('design:paramtypes', [String])(EscapeGameSnapp.prototype, 'guessGateKey');
@@ -110,7 +134,7 @@ export async function deploy() {
       return guessGateKey(snappAddress, key);
     },
     guessUnlabeledPw(key: string) {
-      return guessLabKey(snappAddress, key);
+      return guessUnlabeledPw(snappAddress, key);
     },
     guessLabKey(key: string) {
       return guessLabKey(snappAddress, key);
@@ -130,8 +154,12 @@ export async function deploy() {
     const labKeyCT = Encryption.encrypt(labKeyFields, snappAddress);
     labGroup = labKeyCT.publicKey;
 
+    const unlabeledPwFields = Encoding.Bijective.Fp.fromString(unlabeledPw);
+    const unlabeledPwCT = Encryption.encrypt(unlabeledPwFields, snappAddress);
+    unlabeledPwGroup = unlabeledPwCT.publicKey;
+
     p.balance.subInPlace(ONE_MINA);
-    await snapp.deploy(ONE_MINA, gateKeyCT.cipherText, labKeyCT.cipherText)
+    await snapp.deploy(ONE_MINA, gateKeyCT.cipherText, labKeyCT.cipherText, unlabeledPwCT.cipherText)
     console.log(snapp);
   });
   await tx.send().wait();
@@ -158,18 +186,18 @@ export async function guessGateKey(snappAddress: PublicKey, key: string) {
 
 export async function guessUnlabeledPw(snappAddress: PublicKey, key: string) {
   const snapp = new EscapeGameSnapp(snappAddress);
-  console.log(`Guessing Key ${key}...`);
+  console.log(`Guessing PW ${key}...`);
   const user = PublicKey.fromPrivateKey(USER_ACCOUNT);
 
-  console.log(`Guessing Key ${key}...`);
   let resp;
   try {
-    resp = await snapp.guessLabKey(key, labGroup, user);
+    resp = await snapp.guessUnlabeledPw(key, unlabeledPwGroup, user);
   } catch (err) {
     console.log(err);
     return null
   }
 
+  console.log(resp)
   return resp;
 }
 
