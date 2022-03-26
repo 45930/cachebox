@@ -33,6 +33,7 @@ let unlabeledPwGroup: Group;
 const gateKey = import.meta.env.VITE_GATE_KEY;
 const labKey = import.meta.env.VITE_LAB_KEY;
 const unlabeledPw = import.meta.env.VITE_UNLABELED_PW;
+import { KeyProof } from '../snarkyUtils/keyProof';
 
 class EscapeGameSnapp extends SmartContract {
   constructor(address: PublicKey) {
@@ -68,14 +69,9 @@ class EscapeGameSnapp extends SmartContract {
     const gateKeyCT1: Field = await this.gateKeyCT1.get();
     const gateKeyCT2: Field = await this.gateKeyCT2.get();
 
-    const gateKeyDecrypted = Encryption.decrypt({ publicKey: decryptionKey, cipherText: [gateKeyCT1, gateKeyCT2] }, snappPrivkey);
-    const guessedKeyFields = Encoding.Bijective.Fp.fromString(guessedKey);
+    const keyProof = KeyProof.isValid(guessedKey, user, 0, snappPrivkey, decryptionKey, [gateKeyCT1, gateKeyCT2])
 
-    gateKeyDecrypted[0].assertEquals(guessedKeyFields[0])
-
-    const msg = [user.g.x, user.g.y, Field(1)]; // this user beat puzzle 1
-    const sig = Signature.create(snappPrivkey, msg);
-    return sig;
+    return keyProof;
   }
 
   async guessLabKey(guessedKey: string, decryptionKey: Group, user: PublicKey) {
@@ -101,7 +97,7 @@ class EscapeGameSnapp extends SmartContract {
 
     unlabaledPwDecrypted[0].assertEquals(guessedPwFields[0])
 
-    const msg = [user.g.x, user.g.y, Field(2)]; // this user beat puzzle 2
+    const msg = [user.g.x, user.g.y, Field(2)]; // this user beat puzzle 2q
     const sig = Signature.create(snappPrivkey, msg);
     return sig;
   }
