@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Tile } from 'src/global';
 	import { onMount } from 'svelte';
+	import lab_wall_src from '$lib/assets/lab_wall.jpeg';
 	import lab_hall_src from '$lib/assets/lab_hall.png';
 	import lab_2_src from '$lib/assets/lab2.png';
 	import cave_src from '$lib/assets/cave.jpeg';
@@ -41,6 +42,12 @@
 		}
 		if (templateName == 'lab_2') {
 			template.src = lab_2_src;
+		}
+		if (templateName == 'lab_1') {
+			template.src = lab_wall_src;
+		}
+		if (templateName == 'unlabeled_room') {
+			template.src = lab_wall_src;
 		}
 
 		draw();
