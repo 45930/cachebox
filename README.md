@@ -1,6 +1,6 @@
 # Cachebox
 
-Cachebox is a zk-app escape game built on the MINA blockchain.  Hosted at zk-cachebox.herokuapp.com.
+Cachebox is a zk-app escape game built on the MINA blockchain.  Hosted at [zk-cachebox.herokuapp.com](zk-cachebox.herokuapp.com).
 
 ## Local Dev
 
