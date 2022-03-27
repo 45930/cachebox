@@ -22,6 +22,7 @@ A value must be set for these environment variables for the smart contracts to w
 VITE_GATE_KEY=12345
 VITE_LAB_KEY=12345
 VITE_UNLABELED_PW=example
+VITE_SESSION_KEY=32_CHAR_VALUE # used to encrypt session cookie
 ```
 
 ## Web 2 Components
