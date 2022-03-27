@@ -1,11 +1,12 @@
 import type { GetSession } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 import { handleSession } from "svelte-kit-cookie-session";
+import type { BinaryLike } from "svelte-kit-cookie-session/dist/esm/types";
 
 
 const _handleSession = handleSession(
   {
-    secret: "A_VERY_SECRET_SECRET_32_CHARS_LONG",
+    secret: import.meta.env.VITE_SESSION_KEY as BinaryLike,
   }
 )
 
