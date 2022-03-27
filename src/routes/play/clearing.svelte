@@ -2,18 +2,16 @@
 	import { locationStore } from '$lib/stores/locationStore';
 	import TilePrompt from './[tile_id]/_tilePrompt.svelte';
 	import LineBreak from '$lib/lineBreak.svelte';
-	import TileInteractions from './[tile_id]/_tileInteractions.svelte';
 	import TileMovements from './[tile_id]/_tileMovements.svelte';
 	import { onMount } from 'svelte';
 	import { afterNavigate, goto } from '$app/navigation';
 	import { openModal } from 'svelte-modals';
-	import ClearingKeypadModal from '$lib/modals/clearingKeypadModal.svelte';
+	import KeypadModal from '$lib/modals/keypadModal.svelte';
 	import { loadSnarky, snarkyStore, deployedSnappsStore } from '$lib/stores/minaStore';
 	import Clearing from '$lib/canvases/static.svelte';
 	import { session } from '$app/stores';
-	import type { Signature } from 'snarkyjs';
-
-	$: isSnarkyLoaded = false;
+	import type { KeyProof } from '$lib/snarkyUtils/keyProof';
+	import type { Movement } from 'src/global';
 
 	onMount(async () => {
 		checkSnarkyLoaded();
@@ -21,6 +19,16 @@
 
 	afterNavigate(async () => {
 		await updateSession();
+		if ($session.gateProof && tileConfig.movements.length == 1) {
+			const movements = tileConfig.movements;
+			tileConfig.movements = [
+				...movements,
+				{
+					prompt: 'Enter the lab',
+					to: 'lab_hall'
+				}
+			];
+		}
 	});
 
 	const updateSession = async function () {
@@ -37,12 +45,13 @@
 		$session = data;
 	};
 
-	const addSignatureToSession = async function (sig: Signature) {
+	const addProofToSession = async function (proof: KeyProof) {
+		console.log(proof);
 		const sessionResp = await fetch('/gameState', {
 			headers: { 'content-type': 'application/json' },
 			method: 'PUT',
 			body: JSON.stringify({
-				gateSignature: sig
+				gateProof: proof
 			})
 		});
 
@@ -52,15 +61,13 @@
 	};
 
 	const checkSnarkyLoaded = function () {
-		if (!isSnarkyLoaded) {
-			loadSnarky().then(() => {
-				isSnarkyLoaded = true;
-			});
+		if (!$snarkyStore) {
+			loadSnarky();
 		}
 	};
 
 	const openClearingModal = () => {
-		openModal(ClearingKeypadModal, { onSubmit: onClearingModalSubmit });
+		openModal(KeypadModal, { onSubmit: onClearingModalSubmit });
 	};
 
 	const onClearingModalSubmit = async (key: string) => {
@@ -70,7 +77,7 @@
 		if (!winner) {
 			goto('/play/loser');
 		} else {
-			await addSignatureToSession(winner);
+			await addProofToSession(winner);
 			goto('/play/lab_hall');
 		}
 	};
@@ -88,7 +95,7 @@
 			<TilePrompt prompt={tileConfig.prompt} />
 		</div>
 		<LineBreak />
-		{#if isSnarkyLoaded}
+		{#if $snarkyStore}
 			<button on:click={() => openClearingModal()}>Inspect Keypad</button>
 		{:else}
 			<p>Waiting for snarky...</p>

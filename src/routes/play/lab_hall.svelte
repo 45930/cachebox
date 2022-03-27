@@ -7,32 +7,29 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { openModal } from 'svelte-modals';
-	import ClearingKeypadModal from '$lib/modals/clearingKeypadModal.svelte';
+	import KeypadModal from '$lib/modals/keypadModal.svelte';
 	import { loadSnarky, snarkyStore, deployedSnappsStore } from '$lib/stores/minaStore';
 	import LabHall from '$lib/canvases/static.svelte';
 	import type { Signature } from 'snarkyjs';
 	import { session } from '$app/stores';
-
-	$: isSnarkyLoaded = false;
+	import type { KeyProof } from '$lib/snarkyUtils/keyProof';
 
 	onMount(async () => {
 		checkSnarkyLoaded();
 	});
 
 	const checkSnarkyLoaded = function () {
-		if (!isSnarkyLoaded) {
-			loadSnarky().then(() => {
-				isSnarkyLoaded = true;
-			});
+		if (!$snarkyStore) {
+			loadSnarky();
 		}
 	};
 
-	const addSignatureToSession = async function (sig: Signature) {
+	const addProofToSession = async function (proof: KeyProof) {
 		const sessionResp = await fetch('/gameState', {
 			headers: { 'content-type': 'application/json' },
 			method: 'PUT',
 			body: JSON.stringify({
-				labSignature: sig
+				labProof: proof
 			})
 		});
 
@@ -42,7 +39,7 @@
 	};
 
 	const openClearingModal = () => {
-		openModal(ClearingKeypadModal, { onSubmit: onClearingModalSubmit });
+		openModal(KeypadModal, { onSubmit: onClearingModalSubmit });
 	};
 
 	const onClearingModalSubmit = async (key: string) => {
@@ -52,7 +49,7 @@
 		if (!winner) {
 			goto('/play/loser');
 		} else {
-			await addSignatureToSession(winner);
+			await addProofToSession(winner);
 			goto('/play/winner');
 		}
 	};
@@ -70,7 +67,7 @@
 			<TilePrompt prompt={tileConfig.prompt} />
 		</div>
 		<LineBreak />
-		{#if isSnarkyLoaded}
+		{#if $snarkyStore}
 			<button on:click={() => openClearingModal()}>Inspect Keypad</button>
 		{:else}
 			<p>Waiting for snarky...</p>

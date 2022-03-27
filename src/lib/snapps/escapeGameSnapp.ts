@@ -69,6 +69,7 @@ class EscapeGameSnapp extends SmartContract {
     const gateKeyCT1: Field = await this.gateKeyCT1.get();
     const gateKeyCT2: Field = await this.gateKeyCT2.get();
 
+    // proof that this user solved puzzle with index: 0
     const keyProof = KeyProof.isValid(guessedKey, user, 0, snappPrivkey, decryptionKey, [gateKeyCT1, gateKeyCT2])
 
     return keyProof;
@@ -78,28 +79,20 @@ class EscapeGameSnapp extends SmartContract {
     const labKeyCT1: Field = await this.labKeyCT1.get();
     const labKeyCT2: Field = await this.labKeyCT2.get();
 
-    const labKeyDecrypted = Encryption.decrypt({ publicKey: decryptionKey, cipherText: [labKeyCT1, labKeyCT2] }, snappPrivkey);
-    const guessedKeyFields = Encoding.Bijective.Fp.fromString(guessedKey);
+    // proof that this user solved puzzle with index: 2
+    const keyProof = KeyProof.isValid(guessedKey, user, 2, snappPrivkey, decryptionKey, [labKeyCT1, labKeyCT2])
 
-    labKeyDecrypted[0].assertEquals(guessedKeyFields[0])
-
-    const msg = [user.g.x, user.g.y, Field(3)]; // this user beat puzzle 3
-    const sig = Signature.create(snappPrivkey, msg);
-    return sig;
+    return keyProof;
   }
 
   async guessUnlabeledPw(guessedPw: string, decryptionKey: Group, user: PublicKey) {
     const unlabeledPwCT1: Field = await this.unlabeledPwCT1.get();
     const unlabeledPwCT2: Field = await this.unlabeledPwCT2.get();
 
-    const unlabaledPwDecrypted = Encryption.decrypt({ publicKey: decryptionKey, cipherText: [unlabeledPwCT1, unlabeledPwCT2] }, snappPrivkey);
-    const guessedPwFields = Encoding.Bijective.Fp.fromString(guessedPw);
+    // proof that this user solved puzzle with index: 1
+    const keyProof = KeyProof.isValid(guessedPw, user, 1, snappPrivkey, decryptionKey, [unlabeledPwCT1, unlabeledPwCT2])
 
-    unlabaledPwDecrypted[0].assertEquals(guessedPwFields[0])
-
-    const msg = [user.g.x, user.g.y, Field(2)]; // this user beat puzzle 2q
-    const sig = Signature.create(snappPrivkey, msg);
-    return sig;
+    return keyProof;
   }
 }
 

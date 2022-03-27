@@ -1,13 +1,15 @@
 <script lang="ts">
-	import type { Tile } from 'src/global';
-	import { onMount } from 'svelte';
+	import in_shack_src from '$lib/assets/in_shack.jpeg';
 	import lab_wall_src from '$lib/assets/lab_wall.jpeg';
 	import lab_hall_src from '$lib/assets/lab_hall.png';
 	import lab_2_src from '$lib/assets/lab2.png';
+	import lab_3_src from '$lib/assets/lab_3.jpeg';
 	import cave_src from '$lib/assets/cave.jpeg';
 	import clearing_src from '$lib/assets/clearing.jpeg';
 	import jungle1_src from '$lib/assets/jungle1.jpeg';
 	import jungle2_src from '$lib/assets/jungle2.jpeg';
+	import winner_src from '$lib/assets/winner.jpeg';
+	import loser_src from '$lib/assets/loser.jpeg';
 	import { afterNavigate } from '$app/navigation';
 
 	let canvas: HTMLCanvasElement;
@@ -43,11 +45,23 @@
 		if (templateName == 'lab_2') {
 			template.src = lab_2_src;
 		}
+		if (templateName == 'lab_3') {
+			template.src = lab_3_src;
+		}
 		if (templateName == 'lab_1') {
 			template.src = lab_wall_src;
 		}
 		if (templateName == 'unlabeled_room') {
 			template.src = lab_wall_src;
+		}
+		if (templateName == 'in_shack') {
+			template.src = in_shack_src;
+		}
+		if (templateName == 'winner') {
+			template.src = winner_src;
+		}
+		if (templateName == 'loser') {
+			template.src = loser_src;
 		}
 
 		draw();

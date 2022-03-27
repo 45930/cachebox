@@ -29,7 +29,7 @@
 </script>
 
 {#if isOpen}
-	<div class="fixed top-16 bottom-0 right-0 left-0 flex justify-center pointer-events-none">
+	<div class="fixed top-16 bottom-0 right-0 left-0 flex justify-center pointer-events-none z-40">
 		<div class="w-lg h-80 rounded-md p-4 bg-white flex flex-col justify-center pointer-events-auto">
 			<h2 class="text-center text-xl font-bold">Welcome to Cahchebox</h2>
 			<div class="flex flex-col mx-8">

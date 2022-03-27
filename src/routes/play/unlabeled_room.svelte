@@ -11,8 +11,7 @@
 
 	import { loadSnarky, snarkyStore, deployedSnappsStore } from '$lib/stores/minaStore';
 	import { onMount } from 'svelte';
-
-	$: isSnarkyLoaded = false;
+	import type { KeyProof } from '$lib/snarkyUtils/keyProof';
 
 	const tile = 'unlabeled_room';
 
@@ -98,12 +97,12 @@
 		$session = data;
 	};
 
-	const addSignatureToSession = async function (sig: Signature) {
+	const addProofToSession = async function (proof: KeyProof) {
 		const sessionResp = await fetch('/gameState', {
 			headers: { 'content-type': 'application/json' },
 			method: 'PUT',
 			body: JSON.stringify({
-				unlabeledRoomSignature: sig
+				unlabeledRoomProof: proof
 			})
 		});
 
@@ -113,10 +112,8 @@
 	};
 
 	const checkSnarkyLoaded = function () {
-		if (!isSnarkyLoaded) {
-			loadSnarky().then(() => {
-				isSnarkyLoaded = true;
-			});
+		if (!$snarkyStore) {
+			loadSnarky();
 		}
 	};
 
@@ -183,10 +180,10 @@
 		const winner = await escapeGameSnapp.guessUnlabeledPw(password);
 
 		if (!winner) {
-			goto('/play/loser');
+			alert('Access Denied');
 		} else {
-			await addSignatureToSession(winner);
-			alert('signature saved');
+			await addProofToSession(winner);
+			alert('Access Granted');
 		}
 	};
 </script>
@@ -199,9 +196,9 @@
 			<div class="flex justify-center mb-6">
 				{#each key as char, index}
 					<div class="p-2 border border-solid border-red-400 rounded flex flex-col">
-						<div on:click={() => incrementKey(index)}>^</div>
+						<div on:click={() => incrementKey(index)}>&and;</div>
 						<div>{char}</div>
-						<div on:click={() => decrementKey(index)}>v</div>
+						<div on:click={() => decrementKey(index)}>&or;</div>
 					</div>
 				{/each}
 			</div>
@@ -211,9 +208,16 @@
 				<div class="w-1/2">{plaintext}</div>
 			{/each}
 		</div>
-		{#if isSnarkyLoaded}
-			<label>Password: <input bind:value={password} type="text" /></label><button
-				on:click={() => submitPWGuess()}>Enter PW</button
+		{#if $snarkyStore}
+			<label
+				><input
+					bind:value={password}
+					class="p-1 border border-solid border-slate-600 rounded shadow-sm"
+					type="text"
+				/></label
+			><button
+				on:click={() => submitPWGuess()}
+				class="p-1 border border-solid border-slate-600 rounded shadow-sm">Enter</button
 			>
 		{:else}
 			<p>Waiting for snarky...</p>

@@ -282,6 +282,10 @@ const locations: Record<string, Tile> = {
       {
         prompt: "Enter an unlabeled room near the exit",
         to: "unlabeled_room"
+      },
+      {
+        prompt: "Exit to the clearing",
+        to: "clearing"
       }
     ]
   },

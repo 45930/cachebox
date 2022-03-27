@@ -1,14 +1,15 @@
 /// <reference types="@sveltejs/kit" />
 
-import type { PublicKey, Signature } from "snarkyjs"
+import type { PublicKey } from "snarkyjs"
 import { InteractionType } from "./lib/enums";
 import { PublicKey } from 'snarkyjs';
+import { KeyProof } from './lib/snarkyUtils/keyProof';
 
 interface EscapeGameSnappInterface {
   address: PublicKey;
-  guessGateKey(key: string): Promise<Signature> | Promise<null>;
-  guessUnlabeledPw(key: string): Promise<Signature> | Promise<null>;
-  guessLabKey(key: string): Promise<Signature> | Promise<null>;
+  guessGateKey(key: string): Promise<KeyProof> | Promise<null>;
+  guessUnlabeledPw(key: string): Promise<KeyProof> | Promise<null>;
+  guessLabKey(key: string): Promise<KeyProof> | Promise<null>;
 }
 
 type LocationId = string;

@@ -20,11 +20,11 @@
 				closeModal();
 				break;
 			case 'back':
-				numpadInput[i] = null;
-				numpadInput = numpadInput; // assignment in case we are doing anything reactive
 				if (i > 0) {
 					i--;
 				}
+				numpadInput[i] = null;
+				numpadInput = numpadInput; // assignment in case we are doing anything reactive
 				break;
 			default:
 				numpadInput[i] = value;
@@ -37,7 +37,7 @@
 </script>
 
 {#if isOpen}
-	<div class="fixed top-10 bottom-0 right-0 left-0 flex justify-center pointer-events-none">
+	<div class="fixed top-10 bottom-0 right-0 left-0 flex justify-center pointer-events-none z-40">
 		<div class="w-64 h-60 rounded-md p-4 bg-white flex flex-col justify-center pointer-events-auto">
 			<div class="flex justify-between">
 				{#each numpadInput as char}

@@ -1,6 +1,11 @@
 interface SessionData {
   user: string;
   tile: string;
+  hasVisitedClearing: boolean;
+  hasVisitedLab: boolean;
+  gateProof: KeyProof;
+  labProof: KeyProof;
+  unlabeledRoomProof: KeyProof;
 }
 
 // See https://kit.svelte.dev/docs#typescript
