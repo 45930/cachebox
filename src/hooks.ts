@@ -4,7 +4,6 @@ import { handleSession } from "svelte-kit-cookie-session";
 import type { BinaryLike } from "svelte-kit-cookie-session/dist/esm/types";
 
 
-console.log(import.meta.env.VITE_SESSION_KEY);
 const _handleSession = handleSession(
   {
     secret: import.meta.env.VITE_SESSION_KEY as BinaryLike,

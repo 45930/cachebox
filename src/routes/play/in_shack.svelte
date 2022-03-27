@@ -13,6 +13,7 @@
 	import { openModal } from 'svelte-modals';
 	import HintsModal from '$lib/modals/hintsModal.svelte';
 	import WinnersModal from '$lib/modals/winnersModal.svelte';
+	import Spinner from '$lib/utils/spinner.svelte';
 
 	const tile = 'in_shack';
 
@@ -57,25 +58,32 @@
 
 <div class="container flex justify-center flex-wrap">
 	<Static templateName={tile} />
-	<div class="relative bottom-96 bg-white p-10 opacity-80 w-2xl h-80 text-center mx-auto">
-		Welcome to the shack. Find hints or check the proofs of past winners here.
-		<LineBreak />
-		<div class="flex justify-between mt-8 mb-48">
-			<div on:click={() => openHintsModal()} class="p-12 border border-solid border-black rounded">
-				Hints
+	{#if $snarkyStore}
+		<div class="relative bottom-96 bg-white p-10 opacity-80 w-2xl h-80 text-center mx-auto">
+			Welcome to the shack. Find hints or check the proofs of past winners here.
+			<LineBreak />
+			<div class="flex justify-between mt-8 mb-48">
+				<div
+					on:click={() => openHintsModal()}
+					class="p-12 border border-solid border-black rounded"
+				>
+					Hints
+				</div>
+				<div
+					on:click={() => openWinnersModal()}
+					class="p-12 border border-solid border-black rounded"
+				>
+					Winners
+				</div>
 			</div>
 			<div
-				on:click={() => openWinnersModal()}
-				class="p-12 border border-solid border-black rounded"
+				id="tile-movements"
+				class="w-2xl mb-4 p-2 rounded border-neutral-200 border-solid border-2"
 			>
-				Winners
+				<TileMovements movements={tileConfig.movements} />
 			</div>
 		</div>
-		<div
-			id="tile-movements"
-			class="w-2xl mb-4 p-2 rounded border-neutral-200 border-solid border-2"
-		>
-			<TileMovements movements={tileConfig.movements} />
-		</div>
-	</div>
+	{:else}
+		<Spinner />
+	{/if}
 </div>

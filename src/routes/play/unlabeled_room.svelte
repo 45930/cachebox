@@ -12,6 +12,7 @@
 	import { loadSnarky, snarkyStore, deployedSnappsStore } from '$lib/stores/minaStore';
 	import { onMount } from 'svelte';
 	import type { KeyProof } from '$lib/snarkyUtils/keyProof';
+	import Spinner from '$lib/utils/spinner.svelte';
 
 	const tile = 'unlabeled_room';
 
@@ -190,25 +191,25 @@
 
 <div class="container flex justify-center flex-wrap">
 	<Static templateName={tile} />
-	<div class="relative bottom-96 bg-white p-10 opacity-80 w-2xl h-80 text-center mx-auto">
-		<div>
-			Key:
-			<div class="flex justify-center mb-6">
-				{#each key as char, index}
-					<div class="p-2 border border-solid border-red-400 rounded flex flex-col">
-						<div on:click={() => incrementKey(index)}>&and;</div>
-						<div>{char}</div>
-						<div on:click={() => decrementKey(index)}>&or;</div>
-					</div>
+	{#if $snarkyStore}
+		<div class="relative bottom-96 bg-white p-10 opacity-80 w-2xl h-80 text-center mx-auto">
+			<div>
+				Key:
+				<div class="flex justify-center mb-6">
+					{#each key as char, index}
+						<div class="p-2 border border-solid border-red-400 rounded flex flex-col">
+							<div on:click={() => incrementKey(index)}>&and;</div>
+							<div>{char}</div>
+							<div on:click={() => decrementKey(index)}>&or;</div>
+						</div>
+					{/each}
+				</div>
+			</div>
+			<div class="flex flex-wrap mb-32">
+				{#each decoded as plaintext}
+					<div class="w-1/2">{plaintext}</div>
 				{/each}
 			</div>
-		</div>
-		<div class="flex flex-wrap mb-32">
-			{#each decoded as plaintext}
-				<div class="w-1/2">{plaintext}</div>
-			{/each}
-		</div>
-		{#if $snarkyStore}
 			<label
 				><input
 					bind:value={password}
@@ -219,15 +220,15 @@
 				on:click={() => submitPWGuess()}
 				class="p-1 border border-solid border-slate-600 rounded shadow-sm">Enter</button
 			>
-		{:else}
-			<p>Waiting for snarky...</p>
-		{/if}
-		<LineBreak />
-		<div
-			id="tile-movements"
-			class="w-2xl mb-4 p-2 rounded border-neutral-200 border-solid border-2"
-		>
-			<TileMovements movements={tileConfig.movements} />
+			<LineBreak />
+			<div
+				id="tile-movements"
+				class="w-2xl mb-4 p-2 rounded border-neutral-200 border-solid border-2"
+			>
+				<TileMovements movements={tileConfig.movements} />
+			</div>
 		</div>
-	</div>
+	{:else}
+		<Spinner />
+	{/if}
 </div>

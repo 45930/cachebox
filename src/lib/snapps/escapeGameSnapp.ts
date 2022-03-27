@@ -132,7 +132,6 @@ export async function deploy() {
   };
 
   const tx = Mina.transaction(DEPLOYER_ACCOUNT, async () => {
-    console.log('Deploying Escape Game Snapp...');
     const p = await Party.createSigned(USER_ACCOUNT);
 
     const gateKeyFields = Encoding.Bijective.Fp.fromString(gateKey);
@@ -149,12 +148,10 @@ export async function deploy() {
 
     p.balance.subInPlace(ONE_MINA);
     await snapp.deploy(ONE_MINA, gateKeyCT.cipherText, labKeyCT.cipherText, unlabeledPwCT.cipherText)
-    console.log(snapp);
   });
   await tx.send().wait();
   await Mina.getAccount(snappAddress);
 
-  console.log('Deployed...')
   return snappInterface;
 }
 
@@ -162,7 +159,6 @@ export async function guessGateKey(snappAddress: PublicKey, key: string) {
   const snapp = new EscapeGameSnapp(snappAddress);
   const user = PublicKey.fromPrivateKey(USER_ACCOUNT);
 
-  console.log(`Guessing Key ${key}...`);
   let resp;
   try {
     resp = await snapp.guessGateKey(key, gateGroup, user);
@@ -175,7 +171,6 @@ export async function guessGateKey(snappAddress: PublicKey, key: string) {
 
 export async function guessUnlabeledPw(snappAddress: PublicKey, key: string) {
   const snapp = new EscapeGameSnapp(snappAddress);
-  console.log(`Guessing PW ${key}...`);
   const user = PublicKey.fromPrivateKey(USER_ACCOUNT);
 
   let resp;
@@ -186,16 +181,13 @@ export async function guessUnlabeledPw(snappAddress: PublicKey, key: string) {
     return null
   }
 
-  console.log(resp)
   return resp;
 }
 
 export async function guessLabKey(snappAddress: PublicKey, key: string) {
   const snapp = new EscapeGameSnapp(snappAddress);
-  console.log(`Guessing Key ${key}...`);
   const user = PublicKey.fromPrivateKey(USER_ACCOUNT);
 
-  console.log(`Guessing Key ${key}...`);
   let resp;
   try {
     resp = await snapp.guessLabKey(key, labGroup, user);

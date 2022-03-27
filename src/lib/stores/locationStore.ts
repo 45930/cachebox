@@ -266,9 +266,6 @@ const locations: Record<string, Tile> = {
     id: 'lab_hall',
     title: "Lab Hall",
     prompt: [
-      "You are in a harshly lit hallway with white linoleum floors",
-      "There are some doors off the hallway into lab rooms",
-      "At the end of the hallway, there is a keypad"
     ],
     movements: [
       {
@@ -360,12 +357,12 @@ const locations: Record<string, Tile> = {
     id: "winner",
     title: "Winner",
     prompt: [
-      "You have completed the game so far, congratulations"
+      "You Escaped!  If you go back into the shack, you can see your proofs on the winners list."
     ],
     movements: [
       {
-        prompt: "Return to the clearing",
-        to: "clearing"
+        prompt: "Return to the shack",
+        to: "in_shack"
       }
     ]
   },
@@ -374,12 +371,12 @@ const locations: Record<string, Tile> = {
     title: "Loser",
     prompt: [
       "You entered the wrong key code and tripped a booby trap.",
-      "Try again and make sure you listen carefully to Merlin and Marcus"
+      "Try again, and check the hints in the shack if you need to!"
     ],
     movements: [
       {
         prompt: "Play Again",
-        to: "beach_landing"
+        to: "in_shack"
       }
     ]
   },
